@@ -20,4 +20,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClassManagement.Application\ClassManagement.Application.csproj" />
+    <ProjectReference Include="..\ClassManagement.Infrastructure\ClassManagement.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

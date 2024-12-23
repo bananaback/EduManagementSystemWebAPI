@@ -15,13 +15,19 @@ namespace ClassManagement.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("classes");
 
+            builder.Ignore(c => c.DomainEvents);
+
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Id)
                 .HasColumnName("id");
 
+            builder.Property(c => c.Name)
+                .HasColumnName("name");
+
             builder.Property(c => c.StartDate)
                 .HasColumnName("start_date");
+
 
             builder.Property(c => c.EndDate)
                 .HasColumnName("end_date");

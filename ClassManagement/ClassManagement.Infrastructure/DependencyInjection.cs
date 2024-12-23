@@ -1,17 +1,11 @@
 ﻿using ClassManagement.Application.Common.Interfaces;
 using ClassManagement.Application.Common.Interfaces.Repositories;
-using ClassManagement.Application.Features.Classes.Commands;
+using ClassManagement.Application.Features.Classes.Commands.Create;
 using ClassManagement.Infrastructure.Persistence;
 using ClassManagement.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClassManagement.Infrastructure
 {
@@ -25,7 +19,7 @@ namespace ClassManagement.Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddMediatR(cfg => {
-                cfg.RegisterServicesFromAssemblyContaining<CreateClassCommand>();
+                cfg.RegisterServicesFromAssemblyContaining<CreateClassCommandHandler>();
             });
 
             services.AddScoped<IClassRepository, ClassRepository>();

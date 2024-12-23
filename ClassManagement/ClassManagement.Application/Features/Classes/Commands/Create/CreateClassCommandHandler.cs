@@ -1,5 +1,6 @@
 ﻿using ClassManagement.Application.Common.Interfaces;
 using ClassManagement.Application.Common.Interfaces.Repositories;
+using ClassManagement.Application.Exceptions;
 using ClassManagement.Domain.Entities;
 using MediatR;
 using System;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClassManagement.Application.Features.Classes.Commands
+namespace ClassManagement.Application.Features.Classes.Commands.Create
 {
     public class CreateClassCommandHandler : IRequestHandler<CreateClassCommand, Guid>
     {
@@ -20,12 +21,12 @@ namespace ClassManagement.Application.Features.Classes.Commands
             _classRepository = classRepository;
             _unitOfWork = unitOfWork;
         }
-        public async Task<Guid> Handle(CreateClassCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateClassCommand command, CancellationToken cancellationToken)
         {
             var newClass = new Class(
-                request.ClassName,
-                request.StartDate,
-                request.EndDate
+                command.ClassName,
+                command.StartDate,
+                command.EndDate
             );
 
             await _classRepository.AddAsync(newClass, cancellationToken);
@@ -34,7 +35,7 @@ namespace ClassManagement.Application.Features.Classes.Commands
 
             if (result == 0)
             {
-                throw new Exception("Temp exception");
+                throw new ClassCreationException("Failed to save changes when creating new class");
             }
 
             return newClass.Id;

@@ -32,5 +32,12 @@ namespace ClassManagement.Domain.Entities
             AddDomainEvent(new StudentEnrolledEvent(this.Id, student.Id));
             var enrollment = new Enrollment(student, this, DateTime.Now);
         }
+
+        public void Update(string name, DateTime startDate, DateTime endDate)
+        {
+            Name = name;
+            StartDate = startDate;
+            EndDate = endDate;
+        }
     }
 }

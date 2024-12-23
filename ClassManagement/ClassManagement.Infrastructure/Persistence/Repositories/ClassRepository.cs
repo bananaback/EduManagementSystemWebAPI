@@ -1,5 +1,6 @@
 ﻿using ClassManagement.Application.Common.Interfaces.Repositories;
 using ClassManagement.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,26 @@ namespace ClassManagement.Infrastructure.Persistence.Repositories
         public async Task AddAsync(Class @class, CancellationToken cancellationToken)
         {
             await _context.AddAsync(@class, cancellationToken);
+        }
+
+        public void Delete(Class @class)
+        {
+            _context.Remove(@class);
+        }
+
+        public Task<List<Class>> GetAll()
+        {
+            return _context.Classes.ToListAsync();
+        }
+
+        public async Task<Class?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return await _context.Classes.Where(c => c.Id == id).FirstOrDefaultAsync();
+        }
+
+        public void Update(Class @class)
+        {
+            _context.Update(@class);
         }
     }
 }

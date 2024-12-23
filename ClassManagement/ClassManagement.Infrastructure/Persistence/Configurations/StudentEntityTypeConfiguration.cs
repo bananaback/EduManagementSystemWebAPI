@@ -15,6 +15,8 @@ namespace ClassManagement.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("students");
 
+            builder.Ignore(s => s.DomainEvents);
+
             builder.HasKey(s => s.Id);
             builder.Property(s => s.Id)
                 .HasColumnName("id");

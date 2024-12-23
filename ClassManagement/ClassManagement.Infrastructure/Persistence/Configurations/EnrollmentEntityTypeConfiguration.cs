@@ -14,6 +14,10 @@ namespace ClassManagement.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Enrollment> builder)
         {
             builder.ToTable("enrollments");
+
+            builder.Ignore(e => e.Id);
+
+            builder.Ignore(e => e.DomainEvents);
         }
     }
 }

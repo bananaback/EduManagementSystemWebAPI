@@ -11,6 +11,7 @@ namespace ClassManagement.Application.Common.Interfaces.Repositories
     {
         Task<List<Class>> GetAll();
         Task<Class?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+        Task<Class?> GetByNameAsync(string name, CancellationToken cancellationToken);
         Task AddAsync(Class @class, CancellationToken cancellationToken);
 
         void Update(Class @class);

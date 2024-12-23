@@ -36,6 +36,11 @@ namespace ClassManagement.Infrastructure.Persistence.Repositories
             return await _context.Classes.Where(c => c.Id == id).FirstOrDefaultAsync();
         }
 
+        public async Task<Class?> GetByNameAsync(string name, CancellationToken cancellationToken)
+        {
+            return await _context.Classes.Where(c => c.Name == name).FirstOrDefaultAsync();
+        }
+
         public void Update(Class @class)
         {
             _context.Update(@class);

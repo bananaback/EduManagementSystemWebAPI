@@ -23,6 +23,13 @@ namespace ClassManagement.Application.Features.Classes.Commands.Create
         }
         public async Task<Guid> Handle(CreateClassCommand command, CancellationToken cancellationToken)
         {
+            var existingClassWithName = await _classRepository.GetByNameAsync(command.ClassName, cancellationToken);
+
+            if (existingClassWithName != null)
+            {
+                throw new ClassCreationException($"Class with name {command.ClassName} already exist.");
+            }
+
             var newClass = new Class(
                 command.ClassName,
                 command.StartDate,

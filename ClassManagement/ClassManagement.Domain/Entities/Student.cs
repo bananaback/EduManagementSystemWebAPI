@@ -25,5 +25,12 @@ namespace ClassManagement.Domain.Entities
             Email = email;
             EnrollmentDate = enrollmentDate;
         }
+
+        public void Update(string name, string email, DateTime enrollmentDate)
+        {
+            Name = name;
+            Email = email;
+            EnrollmentDate = enrollmentDate;
+        }
     }
 }

@@ -35,12 +35,26 @@ namespace ClassManagement.API
             {
                 case ClassCreationException classCreationException:
                     message = exception.Message;
-                    statusCode = HttpStatusCode.BadRequest;
                     break;
                 case ClassRetrievalException classRetrievalException:
                     message = exception.Message;
                     statusCode = HttpStatusCode.BadRequest;
                     break;
+                case ClassPersistenceException classPersistenceException:
+                    message = exception.Message;
+                    break;
+
+                case StudentCreationException studentCreationException:
+                    message = exception.Message;
+                    break;
+                case StudentRetrievalException studentRetrievalException:
+                    message = exception.Message;
+                    statusCode = HttpStatusCode.BadRequest;
+                    break;
+                case StudentPersistenceException studentPersistenceException:
+                    message = exception.Message;
+                    break;
+
                 default:
                     message = $"An unexpected error occured. {exception.Message}";
                     break;

@@ -27,9 +27,9 @@ namespace ClassManagement.Infrastructure.Persistence.Repositories
             _context.Students.Remove(student);
         }
 
-        public async Task<List<Student>> GetAll()
+        public Task<List<Student>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await _context.Students.ToListAsync();
+            return _context.Students.ToListAsync(cancellationToken);
         }
 
         public async Task<Student?> GetByEmailAsync(string email, CancellationToken cancellationToken)

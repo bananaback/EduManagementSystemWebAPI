@@ -12,11 +12,9 @@ namespace ClassManagement.Application.Features.Classes.Queries.GetAll
     public class GetAllClassesCommandHandler : IRequestHandler<GetAllClassesCommand, IReadOnlyCollection<ClassReadDto>>
     {
         private readonly IClassRepository _classRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        public GetAllClassesCommandHandler(IClassRepository classRepository, IUnitOfWork unitOfWork)
+        public GetAllClassesCommandHandler(IClassRepository classRepository)
         {
             _classRepository = classRepository;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<IReadOnlyCollection<ClassReadDto>> Handle(GetAllClassesCommand request, CancellationToken cancellationToken)

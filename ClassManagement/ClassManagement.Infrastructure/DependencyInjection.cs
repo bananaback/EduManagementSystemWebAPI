@@ -23,6 +23,7 @@ namespace ClassManagement.Infrastructure
             });
 
             services.AddScoped<IClassRepository, ClassRepository>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }

@@ -29,6 +29,13 @@ namespace ClassManagement.Application.Features.Students.Commands.Edit
                 throw new StudentRetrievalException($"Student with id {command.Id} do not exist");
             }
 
+            if (existingStudent.Name == command.Name
+                && existingStudent.Email == command.Email
+                && existingStudent.EnrollmentDate == command.EnrollmentDate)
+            {
+                return command.Id;
+            }
+
             existingStudent.Update(command.Name, command.Email, command.EnrollmentDate);
 
             var res = await _unitOfWork.SaveChangesAsync(cancellationToken);

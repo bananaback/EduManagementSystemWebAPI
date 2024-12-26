@@ -1,6 +1,7 @@
 ﻿using ClassManagement.Application.Common.Interfaces;
 using ClassManagement.Application.Common.Interfaces.Repositories;
 using ClassManagement.Application.Exceptions;
+using ClassManagement.Application.Features.Students.Queries;
 using MediatR;
 
 namespace ClassManagement.Application.Features.Classes.Queries.GetById
@@ -31,7 +32,17 @@ namespace ClassManagement.Application.Features.Classes.Queries.GetById
                 Id = command.Id,
                 Name = @class.Name,
                 StartDate = @class.StartDate,
-                EndDate = @class.EndDate
+                EndDate = @class.EndDate,
+                EnrolledStudents = @class.Enrollments.Select(
+                    e => new EnrollmentReadDto
+                    {
+                        StudentId = e.Student.Id,
+                        Name = e.Student.Name,
+                        Email = e.Student.Email,
+                        DateEnrolled = e.Student.EnrollmentDate,
+                        DateEnrolledClass = e.EnrollmentDate
+                    }
+                ).ToList(),
             };
         }
     }

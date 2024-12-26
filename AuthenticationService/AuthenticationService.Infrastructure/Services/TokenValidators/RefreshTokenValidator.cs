@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,7 +33,8 @@ namespace AuthenticationService.Infrastructure.Services.TokenValidators
                 ValidateIssuerSigningKey = true,
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero,
+                RoleClaimType = ClaimTypes.Role
             };
 
             try

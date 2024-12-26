@@ -31,12 +31,16 @@ namespace ClassManagement.Infrastructure.Persistence.Repositories
             return _context.Classes.ToListAsync();
         }
 
-        public async Task<Class?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<Class?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _context.Classes.Where(c => c.Id == id).FirstOrDefaultAsync();
+            return await _context.Classes
+                .Include(c => c.Enrollments)
+                .ThenInclude(e => e.Student)
+                .Where(c => c.Id == id)
+                .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<Class?> GetByNameAsync(string name, CancellationToken cancellationToken)
+        public async Task<Class?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
         {
             return await _context.Classes.Where(c => c.Name == name).FirstOrDefaultAsync();
         }

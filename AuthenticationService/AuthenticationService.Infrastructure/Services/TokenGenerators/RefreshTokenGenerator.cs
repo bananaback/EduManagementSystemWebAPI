@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +24,8 @@ namespace AuthenticationService.Infrastructure.Services.TokenGenerators
                 _authenticationConfiguration.RefreshTokenSecret,
                 _authenticationConfiguration.Issuer,
                 _authenticationConfiguration.Audiences,
-                _authenticationConfiguration.RefreshTokenExpirationMinutes);
+                _authenticationConfiguration.RefreshTokenExpirationMinutes,
+                new List<Claim>());
         }
     }
 }

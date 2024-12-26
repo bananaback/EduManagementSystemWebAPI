@@ -24,6 +24,7 @@ namespace AuthenticationService.API.Controllers
         [HttpGet("unprotected")]
         public async Task<IActionResult> TestUnprotected()
         {
+            await Task.Delay(0);
             return Ok("Reached unprotected");
         }
 
@@ -31,6 +32,7 @@ namespace AuthenticationService.API.Controllers
         [HttpGet("protected")]
         public async Task<IActionResult> TestProtected()
         {
+            await Task.Delay(0);
             return Ok("Protected");
         }
 
@@ -38,6 +40,7 @@ namespace AuthenticationService.API.Controllers
         [HttpGet("admin")]
         public async Task<IActionResult> TestAdminEndpoint()
         {
+            await Task.Delay(0);
             return Ok("This is admin endpoint");
         }
 

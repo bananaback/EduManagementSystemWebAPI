@@ -11,7 +11,7 @@ namespace AuthenticationService.Infrastructure.Services.TokenGenerators
 {
     public class TokenGenerator
     {
-        public string GenerateToken(string secretKey, string issuer, List<string> audiences, double exprirationMinutes, IEnumerable<Claim> claims = null)
+        public string GenerateToken(string secretKey, string issuer, List<string> audiences, double exprirationMinutes, IEnumerable<Claim> claims)
         {
             SecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

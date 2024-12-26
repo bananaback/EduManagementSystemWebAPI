@@ -3,10 +3,12 @@ using ClassManagement.API.Responses;
 using ClassManagement.Application.Features.Classes.Commands.Create;
 using ClassManagement.Application.Features.Classes.Commands.Delete;
 using ClassManagement.Application.Features.Classes.Commands.Edit;
+using ClassManagement.Application.Features.Classes.Commands.EnrollStudent;
 using ClassManagement.Application.Features.Classes.Queries.GetAll;
 using ClassManagement.Application.Features.Classes.Queries.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace ClassManagement.API.Controllers
 {
@@ -111,6 +113,30 @@ namespace ClassManagement.API.Controllers
             var classReadDto = await _mediator.Send(command, cancellationToken);
             
             return Ok(classReadDto);
+        }
+
+        [HttpPost("{id:guid}/enrollments")]
+        public async Task<IActionResult> EnrollStudentInClass(Guid id, EnrollStudentInClassRequest request, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
+            var command = new EnrollStudentCommand
+            {
+                ClassId = id,
+                StudentId = request.StudentId,
+            };
+
+            var res = await _mediator.Send(command, cancellationToken);
+
+            if (res)
+            {
+                return Ok($"Enroll student with id {request.StudentId} into class with id {id} successfully.");
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to enroll student into this class");
         }
 
         private IActionResult BadRequestModelState()

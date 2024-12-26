@@ -24,6 +24,7 @@ namespace ClassManagement.Domain.Entities
             StudentId = student.Id;
             Class = @class;
             ClassId = @class.Id;
+            EnrollmentDate = enrollmentDate;
         }
 
         public void UpdateGrade(string grade)

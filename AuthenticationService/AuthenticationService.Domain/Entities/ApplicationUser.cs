@@ -1,4 +1,5 @@
-﻿using AuthenticationService.Domain.ValueObjects;
+﻿using AuthenticationService.Domain.Enums;
+using AuthenticationService.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,16 @@ namespace AuthenticationService.Domain.Entities
         public Guid Id { get; set; }
         public Username Username { get; } = null!;
         public PasswordHash HashPassword { get; } = null!;
+        public RoleEnum Role {  get; set; } 
         public IReadOnlyCollection<RefreshToken> RefreshTokens = new List<RefreshToken>();
 
         public ApplicationUser() { }
-        public ApplicationUser(Username username, PasswordHash hashPassword)
+        public ApplicationUser(Username username, PasswordHash hashPassword, RoleEnum role)
         {
             Id = Guid.NewGuid();
             Username = username;
             HashPassword = hashPassword;
+            Role = role;
         }
     }
 }

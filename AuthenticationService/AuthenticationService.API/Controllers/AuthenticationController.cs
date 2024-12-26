@@ -34,6 +34,13 @@ namespace AuthenticationService.API.Controllers
             return Ok("Protected");
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin")]
+        public async Task<IActionResult> TestAdminEndpoint()
+        {
+            return Ok("This is admin endpoint");
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequest request, CancellationToken cancellationToken = default)
         {

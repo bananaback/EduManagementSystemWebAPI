@@ -1,4 +1,5 @@
 ﻿using AuthenticationService.Domain.Entities;
+using AuthenticationService.Domain.Enums;
 using AuthenticationService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,7 +15,7 @@ namespace AuthenticationService.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            builder.ToTable("user");
+            builder.ToTable("users");
 
             builder.HasKey(u => u.Id);
 
@@ -34,6 +35,13 @@ namespace AuthenticationService.Infrastructure.Persistence.Configurations
                     .HasColumnName("hash_password")
                     .IsRequired();
             });
+
+            builder.Property(u => u.Role)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (RoleEnum) Enum.Parse(typeof(RoleEnum), v)
+                )
+                .HasColumnName("role");
 
             builder.HasMany(u => u.RefreshTokens)
                 .WithOne(rt => rt.User)

@@ -4,6 +4,7 @@ using AuthenticationService.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthenticationService.Infrastructure.Migrations
 {
     [DbContext(typeof(AuthenticationDbContext))]
-    partial class AuthenticationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241226072438_AddUserRoleMigration")]
+    partial class AddUserRoleMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace AuthenticationService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("users", (string)null);
+                    b.ToTable("user", (string)null);
                 });
 
             modelBuilder.Entity("AuthenticationService.Domain.Entities.RefreshToken", b =>
@@ -54,7 +57,7 @@ namespace AuthenticationService.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("refresh_tokens", (string)null);
+                    b.ToTable("refresh_token", (string)null);
                 });
 
             modelBuilder.Entity("AuthenticationService.Domain.Entities.ApplicationUser", b =>
@@ -71,7 +74,7 @@ namespace AuthenticationService.Infrastructure.Migrations
 
                             b1.HasKey("ApplicationUserId");
 
-                            b1.ToTable("users");
+                            b1.ToTable("user");
 
                             b1.WithOwner()
                                 .HasForeignKey("ApplicationUserId");
@@ -89,7 +92,7 @@ namespace AuthenticationService.Infrastructure.Migrations
 
                             b1.HasKey("ApplicationUserId");
 
-                            b1.ToTable("users");
+                            b1.ToTable("user");
 
                             b1.WithOwner()
                                 .HasForeignKey("ApplicationUserId");
@@ -122,7 +125,7 @@ namespace AuthenticationService.Infrastructure.Migrations
 
                             b1.HasKey("RefreshTokenId");
 
-                            b1.ToTable("refresh_tokens");
+                            b1.ToTable("refresh_token");
 
                             b1.WithOwner()
                                 .HasForeignKey("RefreshTokenId");

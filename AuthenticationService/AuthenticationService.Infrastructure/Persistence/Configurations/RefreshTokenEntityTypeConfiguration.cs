@@ -14,7 +14,7 @@ namespace AuthenticationService.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<RefreshToken> builder)
         {
-            builder.ToTable("refresh_token");
+            builder.ToTable("refresh_tokens");
 
             builder.HasKey(rt => rt.Id);
 

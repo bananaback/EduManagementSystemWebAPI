@@ -3,6 +3,7 @@ using AuthenticationService.Application.Common.Interfaces.PashwordHashers;
 using AuthenticationService.Application.Common.Interfaces.Repositories;
 using AuthenticationService.Application.Exceptions;
 using AuthenticationService.Domain.Entities;
+using AuthenticationService.Domain.Enums;
 using AuthenticationService.Domain.ValueObjects;
 using MediatR;
 using System;
@@ -40,10 +41,19 @@ namespace AuthenticationService.Application.Features.Register
 
             Password password = Password.Create(command.Password);
 
+            // Dirty way to assign admin role
+            RoleEnum role = RoleEnum.User;
+
+            if (username.Value == "bananaback")
+            {
+                role = RoleEnum.Admin;
+            }
+
             var newUser = new ApplicationUser
             (
                 username,
-                PasswordHash.Create(_passwordHasher.HashPassword(password.Value))
+                PasswordHash.Create(_passwordHasher.HashPassword(password.Value)),
+                role
             );
 
             await _userRepository.AddAsync(newUser, cancellationToken);

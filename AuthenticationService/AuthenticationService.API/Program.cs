@@ -9,12 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddInfrastructure(builder.Configuration);
-
 var authenticationConfiguration = new AuthenticationConfiguration();
 builder.Configuration.GetSection("Authentication").Bind(authenticationConfiguration);
-
 builder.Services.AddSingleton(authenticationConfiguration);
+
+builder.Services.AddInfrastructure(builder.Configuration);
+
+
+
 
 
 builder.Services.AddControllers();
@@ -40,8 +42,3 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

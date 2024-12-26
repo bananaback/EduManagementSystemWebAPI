@@ -1,6 +1,10 @@
-﻿using AuthenticationService.Application.Common.Interfaces.Authenticators;
+﻿using AuthenticationService.Application.Common.Interfaces;
+using AuthenticationService.Application.Common.Interfaces.Authenticators;
+using AuthenticationService.Application.Common.Interfaces.Repositories;
+using AuthenticationService.Application.Exceptions;
 using AuthenticationService.Application.Features.Login;
 using AuthenticationService.Domain.Entities;
+using AuthenticationService.Domain.ValueObjects;
 using AuthenticationService.Infrastructure.Services.TokenGenerators;
 using System;
 using System.Collections.Generic;
@@ -14,28 +18,41 @@ namespace AuthenticationService.Infrastructure.Services.Authenticators
     {
         private AccessTokenGenerator _accessTokenGenerator;
         private RefreshTokenGenerator _refreshTokenGenerator;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public Authenticator(AccessTokenGenerator accessTokenGenerator,
-            RefreshTokenGenerator refreshTokenGenerator)
+            RefreshTokenGenerator refreshTokenGenerator,
+            IRefreshTokenRepository refreshTokenRepository,
+            IUnitOfWork unitOfWork)
         {
             _accessTokenGenerator = accessTokenGenerator;
             _refreshTokenGenerator = refreshTokenGenerator;
+            _refreshTokenRepository = refreshTokenRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<AuthenticatedUserResult> Authenticate(ApplicationUser user)
+        public async Task<AuthenticatedUserResult> Authenticate(ApplicationUser user, CancellationToken cancellationToken = default)
         {
             string accessToken = _accessTokenGenerator.GenerateToken(user);
-            string refreshToken = _refreshTokenGenerator.GenerateToken();
+            string refreshTokenString = _refreshTokenGenerator.GenerateToken();
 
-            RefreshToken refreshTokenDTO = new RefreshToken()
+            RefreshToken refreshToken = new RefreshToken()
             {
-                Token = refreshToken,
-                UserId = user.Id
+                User = user,
+                Token = TokenValue.Create(refreshTokenString)
             };
 
-            await _refreshTokenRepository.Create(refreshTokenDTO);
+            await _refreshTokenRepository.AddAsync(refreshToken, cancellationToken);
 
-            return Task.FromResult(AuthenticatedUserResult.Success(accessToken, refreshToken));
+            var res = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            if (res <= 0)
+            {
+                throw new TokenPersistenceException("Failed to save refres token while authenticate user.");
+            }
+
+            return AuthenticatedUserResult.Success(accessToken, refreshTokenString);
         }
     }
 }

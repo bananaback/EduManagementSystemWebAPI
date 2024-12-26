@@ -21,12 +21,12 @@ namespace AuthenticationService.Infrastructure.Persistence.Configurations
             builder.Property(rt => rt.Id)
                 .HasColumnName("id");
 
-            builder.Property(rt => rt.Token)
-                .HasConversion(
-                    tokenValue => tokenValue.Value,
-                    value => TokenValue.Create(value)
-                )
-                .HasColumnName("token");
+            builder.OwnsOne(rt => rt.Token, tokenValue =>
+            {
+                tokenValue.Property(tv => tv.Value)
+                    .HasColumnName("token_value")
+                    .IsRequired();
+            });
 
             builder.Property(rt => rt.UserId)
                 .HasColumnName("user_id");

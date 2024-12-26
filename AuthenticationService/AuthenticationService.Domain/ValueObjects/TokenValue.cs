@@ -20,6 +20,7 @@ namespace AuthenticationService.Domain.ValueObjects
             {
                 throw new InvalidTokenValueException("Token value cannot be empty.");
             }
+            Value = value;
         }
 
         public static TokenValue Create(string value)

@@ -1,8 +1,11 @@
 ﻿using AuthenticationService.API.Requests;
 using AuthenticationService.API.Responses;
 using AuthenticationService.Application.Features.Login;
+using AuthenticationService.Application.Features.LogoutUser;
 using AuthenticationService.Application.Features.Register;
+using AuthenticationService.Application.Features.RotateToken;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +19,19 @@ namespace AuthenticationService.API.Controllers
         public AuthenticationController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet("unprotected")]
+        public async Task<IActionResult> TestUnprotected()
+        {
+            return Ok("Reached unprotected");
+        }
+
+        [Authorize]
+        [HttpGet("protected")]
+        public async Task<IActionResult> TestProtected()
+        {
+            return Ok("Protected");
         }
 
         [HttpPost("register")]
@@ -42,7 +58,7 @@ namespace AuthenticationService.API.Controllers
             return Ok("User registration successfully");
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody] LoginUserRequest request, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -50,14 +66,14 @@ namespace AuthenticationService.API.Controllers
                 return BadRequestModelState();
             }
 
-            if (string.IsNullOrEmpty(request.UserName) || string.IsNullOrEmpty(request.Password))
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
             {
                 return BadRequest(new ErrorResponse("Username and password cannot be empty."));
             }    
 
             var command = new LoginUserCommand
             {
-                UserName = request.UserName,
+                UserName = request.Username,
                 Password = request.Password,
             };
 
@@ -65,10 +81,94 @@ namespace AuthenticationService.API.Controllers
 
             if (res.IsSuccess)
             {
-                return Ok(); //...
+                return Ok(new AuthenticatedUserResponse
+                {
+                    Message = "User login successfully.",
+                    AccessToken = res.AccessToken!.Value,
+                    RefreshToken = res.RefreshToken!.Value
+                });
             }
 
             return Unauthorized();
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] RotateTokenRequest request, CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
+            var command = new RotateTokenCommand
+            {
+                RefreshToken = request.RefreshToken,
+            };
+
+            var res = await _mediator.Send(command, cancellationToken);
+
+            if (res.IsSuccess)
+            {
+                return Ok(new AuthenticatedUserResponse
+                {
+                    Message = "Rotate token successfully.",
+                    AccessToken = res.AccessToken!.Value,
+                    RefreshToken = res.RefreshToken!.Value
+                });
+            }
+
+            return Unauthorized();
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> LogoutUser([FromBody] LogoutUserRequest request, CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
+            var command = new LogoutUserCommand
+            {
+                RefreshToken = request.RefreshToken
+            };
+
+            var res = await _mediator.Send(command, cancellationToken);
+
+            if (res)
+            {
+                return Ok("Logout user successfully.");
+            } else
+            {
+                return Ok("Failed to logout user. Plase try again.");
+            }
+        }
+
+        [Authorize]
+        [HttpPost("logout/all")]
+        public async Task<IActionResult> LogoutUserOnAllDevices([FromBody] LogoutUserAllDeviceRequest request, CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
+            var command = new LogoutUserAllDevicesCommand
+            {
+                RefreshToken = request.RefreshToken
+            };
+
+            var res = await _mediator.Send(command, cancellationToken);
+
+            if (res)
+            {
+                return Ok("Logout user on all devices successfully.");
+            }
+            else
+            {
+                return Ok("Failed to logout user on all devices. Plase try again.");
+            }
         }
 
         private IActionResult BadRequestModelState()

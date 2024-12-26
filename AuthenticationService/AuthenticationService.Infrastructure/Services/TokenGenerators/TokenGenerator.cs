@@ -11,15 +11,24 @@ namespace AuthenticationService.Infrastructure.Services.TokenGenerators
 {
     public class TokenGenerator
     {
-        public string GenerateToken(string secretKey, string issuer, string audience, double exprirationMinutes, IEnumerable<Claim> claims = null)
+        public string GenerateToken(string secretKey, string issuer, List<string> audiences, double exprirationMinutes, IEnumerable<Claim> claims = null)
         {
             SecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            claims = claims ?? new List<Claim>();  // Ensure a non-null list
+            var claimList = claims.ToList();
+
+            foreach (string audience in audiences)
+            {
+                Claim audClaim = new Claim("aud", audience);
+                claimList.Add(audClaim);
+            }
+
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer,
-                audience,
-                claims,
+                null,
+                claimList,
                 DateTime.UtcNow,
                 DateTime.UtcNow.AddMinutes(exprirationMinutes),
                 credentials

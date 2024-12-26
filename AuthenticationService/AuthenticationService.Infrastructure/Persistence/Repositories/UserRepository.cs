@@ -1,4 +1,4 @@
-﻿using AuthenticationService.Application.Common.Interfaces.Repository;
+﻿using AuthenticationService.Application.Common.Interfaces.Repositories;
 using AuthenticationService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;

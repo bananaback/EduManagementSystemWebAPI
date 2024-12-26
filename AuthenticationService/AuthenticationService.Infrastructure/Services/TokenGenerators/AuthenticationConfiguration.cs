@@ -13,6 +13,6 @@ namespace AuthenticationService.Infrastructure.Services.TokenGenerators
         public double AccessTokenExpirationMinutes { get; set; }
         public double RefreshTokenExpirationMinutes { get; set; }
         public string Issuer { get; set; } = string.Empty;
-        public string Audience { get; set; } = string.Empty;
+        public List<string> Audiences { get; set; } = new List<string>();
     }
 }

@@ -31,7 +31,7 @@ namespace AuthenticationService.Infrastructure.Services.TokenGenerators
             return _tokenGenerator.GenerateToken(
                 _configuration.AccessTokenSecret,
             _configuration.Issuer,
-                _configuration.Audience,
+                _configuration.Audiences,
                 _configuration.AccessTokenExpirationMinutes,
                 claims);
         }

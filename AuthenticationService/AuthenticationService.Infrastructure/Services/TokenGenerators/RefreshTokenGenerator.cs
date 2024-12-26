@@ -22,7 +22,7 @@ namespace AuthenticationService.Infrastructure.Services.TokenGenerators
             return _tokenGenerator.GenerateToken(
                 _authenticationConfiguration.RefreshTokenSecret,
                 _authenticationConfiguration.Issuer,
-                _authenticationConfiguration.Audience,
+                _authenticationConfiguration.Audiences,
                 _authenticationConfiguration.RefreshTokenExpirationMinutes);
         }
     }

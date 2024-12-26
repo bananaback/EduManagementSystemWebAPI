@@ -22,6 +22,7 @@ namespace AuthenticationService.Domain.ValueObjects
             {
                 throw new InvalidPasswordHashException("Password hash cannot be empty");
             }
+            Value = value;
         }
 
         public static PasswordHash Create(string value)

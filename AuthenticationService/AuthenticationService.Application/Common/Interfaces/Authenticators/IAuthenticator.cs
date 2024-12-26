@@ -10,6 +10,6 @@ namespace AuthenticationService.Application.Common.Interfaces.Authenticators
 {
     public interface IAuthenticator
     {
-        Task<AuthenticatedUserResult> Authenticate(ApplicationUser user);
+        Task<AuthenticatedUserResult> Authenticate(ApplicationUser user, CancellationToken cancellationToken);
     }
 }

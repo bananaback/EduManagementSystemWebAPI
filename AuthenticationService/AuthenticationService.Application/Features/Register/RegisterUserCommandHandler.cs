@@ -1,6 +1,6 @@
 ﻿using AuthenticationService.Application.Common.Interfaces;
 using AuthenticationService.Application.Common.Interfaces.PashwordHashers;
-using AuthenticationService.Application.Common.Interfaces.Repository;
+using AuthenticationService.Application.Common.Interfaces.Repositories;
 using AuthenticationService.Application.Exceptions;
 using AuthenticationService.Domain.Entities;
 using AuthenticationService.Domain.ValueObjects;

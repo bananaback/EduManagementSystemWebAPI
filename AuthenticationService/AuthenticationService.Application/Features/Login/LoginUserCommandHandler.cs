@@ -1,7 +1,7 @@
 ﻿using AuthenticationService.Application.Common.Interfaces;
 using AuthenticationService.Application.Common.Interfaces.Authenticators;
 using AuthenticationService.Application.Common.Interfaces.PashwordHashers;
-using AuthenticationService.Application.Common.Interfaces.Repository;
+using AuthenticationService.Application.Common.Interfaces.Repositories;
 using AuthenticationService.Application.Exceptions;
 using AuthenticationService.Domain.ValueObjects;
 using MediatR;
@@ -43,11 +43,11 @@ namespace AuthenticationService.Application.Features.Login
                 throw new UserRetrievalException($"User with username {command.UserName} not found.");
             }
 
-            bool isCorrectPassword = existingUser.HashPassword.Value == _passwordHasher.HashPassword(password.Value);
+            bool isCorrectPassword = _passwordHasher.VerifyPassword(password.Value, existingUser.HashPassword.Value);
 
             if (isCorrectPassword)
             {
-                return await _authenticator.Authenticate(existingUser);
+                return await _authenticator.Authenticate(existingUser, cancellationToken);
             }
 
             return AuthenticatedUserResult.Failure();

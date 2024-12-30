@@ -1,6 +1,7 @@
 using AuthenticationService.API;
 using AuthenticationService.Infrastructure;
 using AuthenticationService.Infrastructure.Services.TokenGenerators;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,11 +16,23 @@ builder.Services.AddSingleton(authenticationConfiguration);
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
-
-
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AuthenticationPolicy", policy =>
+    {
+        policy.WithOrigins("https://myfrontend.com") // Replace with frontend origin soon
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // Allow cookies or Authorization headers
+    });
+});
 
 builder.Services.AddControllers();
+
+
+//Add support to logging with SERILOG
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 
@@ -34,16 +47,8 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AuthenticationPolicy", policy =>
-    {
-        policy.WithOrigins("https://myfrontend.com") // Replace with frontend origin soon
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // Allow cookies or Authorization headers
-    });
-});
+//Add support to logging request with SERILOG
+app.UseSerilogRequestLogging();
 
 //app.UseCors("AuthenticationPolicy");
 

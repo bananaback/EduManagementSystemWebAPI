@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using StudentManagement.API;
 using StudentManagement.Infrastructure;
 using StudentManagement.Infrastructure.Services.Authenticators;
@@ -18,12 +19,27 @@ builder.Services.AddSingleton(authenticationConfiguration);
 // Register Infrastructure services
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("StudentManagementPolicy", policy =>
+    {
+        policy.WithOrigins("https://myfrontend.com") // Replace with frontend origin soon
+              .WithMethods("GET", "POST", "PUT", "DELETE") // Only allowed methods
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
 
 builder.Services.AddControllers();
+
+//Add support to logging with SERILOG
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 
@@ -36,18 +52,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseRouting();
+//Add support to logging request with SERILOG
+app.UseSerilogRequestLogging();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("StudentManagementPolicy", policy =>
-    {
-        policy.WithOrigins("https://myfrontend.com") // Replace with frontend origin soon
-              .WithMethods("GET", "POST", "PUT", "DELETE") // Only allowed methods
-              .AllowAnyHeader()
-              .AllowCredentials();
-    });
-});
+app.UseRouting();
 
 //app.UseCors("StudentManagementPolicy");
 

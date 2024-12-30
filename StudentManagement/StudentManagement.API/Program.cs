@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StudentManagement.API;
 using StudentManagement.Infrastructure;
+using StudentManagement.Infrastructure.Services.Authenticators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var authenticationConfiguration = new AuthenticationConfiguration();
+builder.Configuration.GetSection("Authentication").Bind(authenticationConfiguration);
+builder.Services.AddSingleton(authenticationConfiguration);
+
 
 // Register Infrastructure services
 builder.Services.AddInfrastructure(builder.Configuration);

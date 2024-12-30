@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagement.API.Requests;
 using StudentManagement.API.Responses;
@@ -12,6 +13,7 @@ namespace StudentManagement.API.Controllers
 {
     [ApiController]
     [Route("/api/students")]
+    [Authorize(Roles = "Admin,User")]
     public class StudentController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -20,6 +22,7 @@ namespace StudentManagement.API.Controllers
         {
             _mediator = mediator;
         }
+
         [HttpGet("test")]
         public IActionResult Get()
         {
@@ -27,7 +30,6 @@ namespace StudentManagement.API.Controllers
         }
 
         [HttpGet]
-
         public async Task<IActionResult> GetAllStudentsAsync(CancellationToken cancellationToken = default)
         {
             var command = new GetAllStudentsCommand();

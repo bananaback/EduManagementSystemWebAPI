@@ -4,6 +4,17 @@
     <ProjectReference Include="..\StudentManagement.Domain\StudentManagement.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Students\Commands\Edit\" />
+    <Folder Include="Features\Students\Commands\Delete\" />
+    <Folder Include="Features\Students\Queries\GetAll\" />
+    <Folder Include="Features\Students\Queries\GetById\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

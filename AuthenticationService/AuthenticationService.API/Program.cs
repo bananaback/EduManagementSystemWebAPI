@@ -13,10 +13,6 @@ var authenticationConfiguration = new AuthenticationConfiguration();
 builder.Configuration.GetSection("Authentication").Bind(authenticationConfiguration);
 builder.Services.AddSingleton(authenticationConfiguration);
 
-var authenticationConfiguration = new AuthenticationConfiguration();
-builder.Configuration.GetSection("Authentication").Bind(authenticationConfiguration);
-builder.Services.AddSingleton(authenticationConfiguration);
-
 builder.Services.AddInfrastructure(builder.Configuration);
 
 
@@ -37,6 +33,20 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AuthenticationPolicy", policy =>
+    {
+        policy.WithOrigins("https://myfrontend.com") // Replace with frontend origin soon
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // Allow cookies or Authorization headers
+    });
+});
+
+//app.UseCors("AuthenticationPolicy");
+
 
 app.UseAuthentication();
 app.UseAuthorization();

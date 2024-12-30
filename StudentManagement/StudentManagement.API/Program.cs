@@ -38,6 +38,20 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("StudentManagementPolicy", policy =>
+    {
+        policy.WithOrigins("https://myfrontend.com") // Replace with frontend origin soon
+              .WithMethods("GET", "POST", "PUT", "DELETE") // Only allowed methods
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
+//app.UseCors("StudentManagementPolicy");
+
+
 app.UseAuthentication();
 app.UseAuthorization();
 

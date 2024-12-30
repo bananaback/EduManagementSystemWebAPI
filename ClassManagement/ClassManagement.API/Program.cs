@@ -39,6 +39,20 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ClassManagementPolicy", policy =>
+    {
+        policy.WithOrigins("https://myfrontend.com") // Replace with frontend origin soon
+              .WithMethods("GET", "POST", "PUT", "DELETE") // Only allowed methods
+              .AllowAnyHeader() // Allow custom headers like Authorization
+              .AllowCredentials(); // For token-based authentication
+    });
+});
+
+//app.UseCors("ClassManagementPolicy");
+
+
 app.UseAuthentication();
 app.UseAuthorization();
 

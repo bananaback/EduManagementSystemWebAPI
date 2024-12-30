@@ -11,6 +11,7 @@ using ClassManagement.Application.Features.Students.Commands.Edit;
 using ClassManagement.Application.Features.Students.Queries.GetAll;
 using ClassManagement.Application.Features.Students.Queries.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 
@@ -18,6 +19,7 @@ namespace ClassManagement.API.Controllers
 {
     [ApiController]
     [Route("/api/students")]
+    [Authorize(Roles = "Admin,User")]
     public class StudentController : ControllerBase
     {
         private readonly IMediator _mediator;

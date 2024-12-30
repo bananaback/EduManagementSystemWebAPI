@@ -13,6 +13,10 @@ var authenticationConfiguration = new AuthenticationConfiguration();
 builder.Configuration.GetSection("Authentication").Bind(authenticationConfiguration);
 builder.Services.AddSingleton(authenticationConfiguration);
 
+var authenticationConfiguration = new AuthenticationConfiguration();
+builder.Configuration.GetSection("Authentication").Bind(authenticationConfiguration);
+builder.Services.AddSingleton(authenticationConfiguration);
+
 builder.Services.AddInfrastructure(builder.Configuration);
 
 

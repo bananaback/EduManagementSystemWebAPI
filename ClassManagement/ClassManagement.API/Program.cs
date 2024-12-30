@@ -1,6 +1,7 @@
 using ClassManagement.API;
 using ClassManagement.Application;
 using ClassManagement.Infrastructure;
+using ClassManagement.Infrastructure.Services.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var authenticationConfiguration = new AuthenticationConfiguration();
+builder.Configuration.GetSection("Authentication").Bind(authenticationConfiguration);
+builder.Services.AddSingleton(authenticationConfiguration);
 
 // Register Infrastructure services
 builder.Services.AddInfrastructure(builder.Configuration);

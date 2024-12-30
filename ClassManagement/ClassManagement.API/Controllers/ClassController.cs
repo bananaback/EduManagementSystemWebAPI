@@ -7,6 +7,7 @@ using ClassManagement.Application.Features.Classes.Commands.EnrollStudent;
 using ClassManagement.Application.Features.Classes.Queries.GetAll;
 using ClassManagement.Application.Features.Classes.Queries.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -14,6 +15,7 @@ namespace ClassManagement.API.Controllers
 {
     [ApiController]
     [Route("/api/classes")]
+    [Authorize(Roles = "Admin,User")]
     public class ClassController : ControllerBase
     {
         private readonly IMediator _mediator;

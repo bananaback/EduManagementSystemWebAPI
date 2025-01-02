@@ -1,4 +1,5 @@
-﻿using AuthenticationService.Domain.Entities;
+﻿using AuthenticationService.Application.Common.Interfaces.TokenGenerators;
+using AuthenticationService.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -12,15 +13,20 @@ namespace AuthenticationService.Infrastructure.Services.TokenGenerators
     public class AccessTokenGenerator
     {
         private readonly AuthenticationConfiguration _configuration;
-        private readonly TokenGenerator _tokenGenerator;
-        
-        public AccessTokenGenerator(AuthenticationConfiguration authenticationConfiguration, TokenGenerator tokenGenerator)
+        private readonly ITokenGenerator _tokenGenerator;
+
+        public AccessTokenGenerator()
+        {
+
+        }
+
+        public AccessTokenGenerator(AuthenticationConfiguration authenticationConfiguration, ITokenGenerator tokenGenerator)
         {
             _configuration = authenticationConfiguration;
             _tokenGenerator = tokenGenerator;
         }
 
-        public string GenerateToken(ApplicationUser user)
+        public virtual string GenerateToken(ApplicationUser user)
         {
             List<Claim> claims = new List<Claim>()
             {

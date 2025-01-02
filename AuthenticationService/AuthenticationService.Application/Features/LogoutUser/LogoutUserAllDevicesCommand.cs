@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AuthenticationService.Domain.ValueObjects;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,11 @@ namespace AuthenticationService.Application.Features.LogoutUser
 {
     public class LogoutUserAllDevicesCommand : IRequest<bool>
     {
-        public string RefreshToken { get; set; } = string.Empty;
+        public TokenValue RefreshToken { get; private set; } = null!;
+
+        public LogoutUserAllDevicesCommand(string refreshToken)
+        {
+            RefreshToken = TokenValue.Create(refreshToken);
+        }
     }
 }

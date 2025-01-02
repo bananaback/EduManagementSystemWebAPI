@@ -17,16 +17,20 @@ namespace AuthenticationService.Domain.ValueObjects
 
         private Username(string value)
         {
+            if (value == null)
+            {
+                throw new InvalidUsernameException("Username cannot be null or empty.");            }
+
             value = value.Trim();
 
             if (string.IsNullOrEmpty(value))
             {
-                throw new InvalidUsernameException("Username cannot be empty");
+                throw new InvalidUsernameException("Username cannot be null or empty.");
             }
 
             if (!HasRequiredConstraints(value))
             {
-                throw new InvalidUsernameException("User name must have must contains only alphanumeric, underscore or dot. It starts and ends with an alphanumeric character. Length in range 4-30 characters.");
+                throw new InvalidUsernameException("Username must have must contains only alphanumeric, underscore or dot. It starts and ends with an alphanumeric character. Length in range 4-30 characters.");
             }
 
             Value = value;

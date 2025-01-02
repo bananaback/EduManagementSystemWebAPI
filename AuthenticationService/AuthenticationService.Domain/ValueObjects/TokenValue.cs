@@ -16,10 +16,18 @@ namespace AuthenticationService.Domain.ValueObjects
         
         private TokenValue(string value)
         {
+            if (value == null)
+            {
+                throw new InvalidTokenValueException("Token value cannot be null or empty.");
+            }
+
+            value = value.Trim();
+
             if (string.IsNullOrEmpty(value))
             {
-                throw new InvalidTokenValueException("Token value cannot be empty.");
+                throw new InvalidTokenValueException("Token value cannot be null or empty.");
             }
+
             Value = value;
         }
 

@@ -6,7 +6,6 @@ using AuthenticationService.Application.Features.Register;
 using AuthenticationService.Application.Features.RotateToken;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthenticationService.API.Controllers
@@ -19,29 +18,6 @@ namespace AuthenticationService.API.Controllers
         public AuthenticationController(IMediator mediator)
         {
             _mediator = mediator;
-        }
-
-        [HttpGet("unprotected")]
-        public async Task<IActionResult> TestUnprotected()
-        {
-            await Task.Delay(0);
-            return Ok("Reached unprotected");
-        }
-
-        [Authorize]
-        [HttpGet("protected")]
-        public async Task<IActionResult> TestProtected()
-        {
-            await Task.Delay(0);
-            return Ok("Protected");
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpGet("admin")]
-        public async Task<IActionResult> TestAdminEndpoint()
-        {
-            await Task.Delay(0);
-            return Ok("This is admin endpoint");
         }
 
         [HttpPost("register")]
@@ -103,17 +79,14 @@ namespace AuthenticationService.API.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody] RotateTokenRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Refresh([FromBody] RotateTokenRequest request, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequestModelState();
             }
 
-            var command = new RotateTokenCommand
-            {
-                RefreshToken = request.RefreshToken,
-            };
+            var command = new RotateTokenCommand(request.RefreshToken);
 
             var res = await _mediator.Send(command, cancellationToken);
 
@@ -132,17 +105,14 @@ namespace AuthenticationService.API.Controllers
 
         [Authorize]
         [HttpPost("logout")]
-        public async Task<IActionResult> LogoutUser([FromBody] LogoutUserRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> LogoutUser([FromBody] LogoutUserRequest request, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequestModelState();
             }
 
-            var command = new LogoutUserCommand
-            {
-                RefreshToken = request.RefreshToken
-            };
+            var command = new LogoutUserCommand(request.RefreshToken);
 
             var res = await _mediator.Send(command, cancellationToken);
 
@@ -157,17 +127,14 @@ namespace AuthenticationService.API.Controllers
 
         [Authorize]
         [HttpPost("logout/all")]
-        public async Task<IActionResult> LogoutUserOnAllDevices([FromBody] LogoutUserAllDeviceRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> LogoutUserOnAllDevices([FromBody] LogoutUserAllDeviceRequest request, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequestModelState();
             }
 
-            var command = new LogoutUserAllDevicesCommand
-            {
-                RefreshToken = request.RefreshToken
-            };
+            var command = new LogoutUserAllDevicesCommand(request.RefreshToken);
 
             var res = await _mediator.Send(command, cancellationToken);
 
@@ -177,7 +144,7 @@ namespace AuthenticationService.API.Controllers
             }
             else
             {
-                return Ok("Failed to logout user on all devices. Plase try again.");
+                return Unauthorized("Failed to logout user on all devices. Plase try again.");
             }
         }
 

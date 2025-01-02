@@ -23,7 +23,7 @@ namespace AuthenticationService.Application.Features.LogoutUser
         }
         public async Task<bool> Handle(LogoutUserCommand command, CancellationToken cancellationToken)
         {
-            var refreshToken = await _refreshTokenRepository.GetByTokenAsync(command.RefreshToken, cancellationToken);
+            var refreshToken = await _refreshTokenRepository.GetByTokenAsync(command.RefreshToken.Value, cancellationToken);
 
             if (refreshToken == null)
             {

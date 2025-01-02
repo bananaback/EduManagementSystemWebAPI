@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using AuthenticationService.Application.Common.Interfaces.TokenGenerators;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Infrastructure.Services.TokenGenerators
 {
-    public class TokenGenerator
+    public class TokenGenerator : ITokenGenerator
     {
         public string GenerateToken(string secretKey, string issuer, List<string> audiences, double exprirationMinutes, IEnumerable<Claim> claims)
         {

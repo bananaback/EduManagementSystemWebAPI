@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AuthenticationService.Application.Common.Interfaces.TokenGenerators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -10,15 +11,20 @@ namespace AuthenticationService.Infrastructure.Services.TokenGenerators
     public class RefreshTokenGenerator
     {
         private readonly AuthenticationConfiguration _authenticationConfiguration;
-        private readonly TokenGenerator _tokenGenerator;
+        private readonly ITokenGenerator _tokenGenerator;
 
-        public RefreshTokenGenerator(AuthenticationConfiguration authenticationConfiguration, TokenGenerator tokenGenerator)
+        public RefreshTokenGenerator()
+        {
+
+        }
+
+        public RefreshTokenGenerator(AuthenticationConfiguration authenticationConfiguration, ITokenGenerator tokenGenerator)
         {
             _authenticationConfiguration = authenticationConfiguration;
             _tokenGenerator = tokenGenerator;
         }
 
-        public string GenerateToken()
+        public virtual string GenerateToken()
         {
             return _tokenGenerator.GenerateToken(
                 _authenticationConfiguration.RefreshTokenSecret,

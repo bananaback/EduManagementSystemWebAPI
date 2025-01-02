@@ -16,7 +16,7 @@ namespace AuthenticationService.Infrastructure.Persistence.Repositories
         {
             _context = context;
         }
-        public async Task AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
+        public async Task AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
         {
             await _context.RefreshTokens.AddAsync(refreshToken, cancellationToken);
         }

@@ -36,7 +36,7 @@ namespace AuthenticationService.Application.Features.RotateToken
         }
         public async Task<AuthenticatedUserResult> Handle(RotateTokenCommand command, CancellationToken cancellationToken)
         {
-            bool isValidRefreshToken = _tokenValidator.Validate(command.RefreshToken);
+            bool isValidRefreshToken = _tokenValidator.Validate(command.RefreshToken.Value);
 
             if (!isValidRefreshToken)
             {
@@ -44,7 +44,7 @@ namespace AuthenticationService.Application.Features.RotateToken
             }
 
             // Check if token revoked or not
-            var refreshToken = await _refreshTokenRepository.GetByTokenAsync(command.RefreshToken, cancellationToken);
+            var refreshToken = await _refreshTokenRepository.GetByTokenAsync(command.RefreshToken.Value, cancellationToken);
 
             if (refreshToken == null)
             {

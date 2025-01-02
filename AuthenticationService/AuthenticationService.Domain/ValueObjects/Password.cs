@@ -18,11 +18,16 @@ namespace AuthenticationService.Domain.ValueObjects
 
         private Password(string value)
         {
+            if (value == null)
+            {
+                throw new InvalidPasswordException("Password cannot be null or empty.");
+            }
+
             value = value.Trim();
 
             if (string.IsNullOrEmpty(value))
             {
-                throw new InvalidPasswordException("Password cannot be empty.");
+                throw new InvalidPasswordException("Password cannot be null or empty.");
             }
 
             if (!HasRequiredStrength(value))

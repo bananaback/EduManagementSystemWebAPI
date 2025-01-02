@@ -2,6 +2,7 @@
 using AuthenticationService.Application.Common.Interfaces.Authenticators;
 using AuthenticationService.Application.Common.Interfaces.PashwordHashers;
 using AuthenticationService.Application.Common.Interfaces.Repositories;
+using AuthenticationService.Application.Common.Interfaces.TokenGenerators;
 using AuthenticationService.Application.Common.Interfaces.TokenValidators;
 using AuthenticationService.Application.Features.Register;
 using AuthenticationService.Infrastructure.Persistence;
@@ -57,7 +58,7 @@ namespace AuthenticationService.Infrastructure
 
             services.AddSingleton<AccessTokenGenerator>();
             services.AddSingleton<RefreshTokenGenerator>();
-            services.AddSingleton<TokenGenerator>();
+            services.AddSingleton<ITokenGenerator, TokenGenerator>();
 
             services.AddScoped<ITokenValidator, RefreshTokenValidator>();
             services.AddScoped<IAuthenticator, Authenticator>();

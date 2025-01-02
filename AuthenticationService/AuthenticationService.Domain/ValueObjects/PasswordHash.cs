@@ -16,13 +16,29 @@ namespace AuthenticationService.Domain.ValueObjects
 
         private PasswordHash(string value)
         {
+            if (value == null)
+            {
+                throw new InvalidPasswordHashException("Password hash cannot be null or empty.");
+            }
+
             value = value.Trim();
 
             if (string.IsNullOrEmpty(value))
             {
-                throw new InvalidPasswordHashException("Password hash cannot be empty");
+                throw new InvalidPasswordHashException("Password hash cannot be null or empty.");
             }
+
+            if (!IsValidBcryptPasswordHash(value))
+            {
+                throw new InvalidPasswordHashException("Invalid bcrypt format.");
+            }
+
             Value = value;
+        }
+
+        private bool IsValidBcryptPasswordHash(string hash)
+        {
+            return hash.Length == 60 && hash.StartsWith("$");
         }
 
         public static PasswordHash Create(string value)

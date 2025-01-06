@@ -16,13 +16,28 @@ namespace ClassManagement.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     start_date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     end_date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_classes", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "inbox_messages",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    message_type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    date_created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    payload = table.Column<string>(type: "nvarchar(500)", nullable: false),
+                    Processed = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_inbox_messages", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -46,8 +61,7 @@ namespace ClassManagement.Infrastructure.Migrations
                     student_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     class_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     grade = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    enrollment_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    enrollment_date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -77,6 +91,9 @@ namespace ClassManagement.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "enrollments");
+
+            migrationBuilder.DropTable(
+                name: "inbox_messages");
 
             migrationBuilder.DropTable(
                 name: "classes");

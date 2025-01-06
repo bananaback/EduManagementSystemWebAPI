@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentManagement.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using StudentManagement.Infrastructure.Persistence;
 namespace StudentManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250106025607_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,21 +41,10 @@ namespace StudentManagement.Infrastructure.Migrations
                         .HasColumnType("nvarchar(500)")
                         .HasColumnName("payload");
 
-                    b.Property<bool>("Processed")
-                        .HasColumnType("bit")
-                        .HasColumnName("processed");
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("type");
-
-                    b.Property<byte[]>("VersionRow")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion")
-                        .HasColumnName("version_row");
 
                     b.HasKey("Id");
 

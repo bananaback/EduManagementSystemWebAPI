@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClassManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241223013723_InitialMigration")]
+    [Migration("20250106095632_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -38,7 +38,8 @@ namespace ClassManagement.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("name");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2")
@@ -68,14 +69,40 @@ namespace ClassManagement.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("grade");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("StudentId", "ClassId");
 
                     b.HasIndex("ClassId");
 
                     b.ToTable("enrollments", (string)null);
+                });
+
+            modelBuilder.Entity("ClassManagement.Domain.Entities.InboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date_created");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("payload");
+
+                    b.Property<bool>("Processed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("message_type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("inbox_messages", (string)null);
                 });
 
             modelBuilder.Entity("ClassManagement.Domain.Entities.Student", b =>

@@ -17,6 +17,8 @@ namespace AuthenticationService.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("users");
 
+            builder.Ignore(u => u.DomainEvents);
+
             builder.HasKey(u => u.Id);
 
             builder.Property(u => u.Id)

@@ -4,6 +4,7 @@ using ClassManagement.Infrastructure;
 using ClassManagement.Infrastructure.Services.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddSingleton(authenticationConfiguration);
 
 // Register Infrastructure services
 builder.Services.AddInfrastructure(builder.Configuration);
+
 
 builder.Services.AddCors(options =>
 {
@@ -36,8 +38,12 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 
 // Register Controllers
-builder.Services.AddControllers();  // This adds API controllers to the DI container
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+}); ;  // This adds API controllers to the DI container
 
+    
 //Add support to logging with SERILOG
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));

@@ -1,4 +1,5 @@
-﻿using AuthenticationService.Domain.Enums;
+﻿using AuthenticationService.Domain.Common;
+using AuthenticationService.Domain.Enums;
 using AuthenticationService.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Domain.Entities
 {
-    public class ApplicationUser
+    public class ApplicationUser : BaseEntity
     {
-        public Guid Id { get; set; }
         public Username Username { get; } = null!;
         public PasswordHash HashPassword { get; } = null!;
         public RoleEnum Role {  get; set; } 

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using StudentManagement.API;
+using StudentManagement.Application.BackgroundServices;
 using StudentManagement.Infrastructure;
 using StudentManagement.Infrastructure.Services.Authenticators;
 

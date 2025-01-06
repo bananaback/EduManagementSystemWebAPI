@@ -1,9 +1,11 @@
 ﻿using ClassManagement.Application.Common.Interfaces;
 using ClassManagement.Application.Common.Interfaces.Repositories;
+using ClassManagement.Application.Common.Interfaces.Services;
 using ClassManagement.Application.Features.Classes.Commands.Create;
 using ClassManagement.Infrastructure.Persistence;
 using ClassManagement.Infrastructure.Persistence.Repositories;
 using ClassManagement.Infrastructure.Services.Authentication;
+using ClassManagement.Infrastructure.Services.MessageSenders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -45,8 +47,16 @@ namespace ClassManagement.Infrastructure
                 cfg.RegisterServicesFromAssemblyContaining<CreateClassCommandHandler>();
             });
 
+            services.AddHttpClient("AckApiClient", client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:7202/");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
+
             services.AddScoped<IClassRepository, ClassRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IMessageSender, HttpMessageSender>();
+            services.AddScoped<IInboxMessageRepository, InboxMessageRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }

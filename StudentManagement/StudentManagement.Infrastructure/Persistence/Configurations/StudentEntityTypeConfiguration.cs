@@ -22,13 +22,20 @@ namespace StudentManagement.Infrastructure.Persistence.Configurations
                 .HasColumnName("id");
 
             builder.Property(s => s.Name)
-                .HasColumnName("name");
+                .HasColumnName("name")
+                .HasColumnType("nvarchar(100)")
+                .IsRequired();
 
             builder.Property(s => s.Email)
-                .HasColumnName("email");
+                .HasColumnName("email")
+                .HasColumnType("nvarchar(256)")
+                .IsRequired();
 
             builder.Property(s => s.EnrollmentDate)
-                .HasColumnName("enrollment_date");
+                .HasColumnName("enrollment_date")
+                .HasColumnType("datetime2")
+                .IsRequired();
         }
+
     }
 }

@@ -14,6 +14,7 @@ namespace ClassManagement.Infrastructure.Persistence
         public DbSet<Student> Students { get; set; }
         public DbSet<Class> Classes { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<InboxMessage> InboxMessages { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
             : base(options)
@@ -28,6 +29,7 @@ namespace ClassManagement.Infrastructure.Persistence
             new ClassEntityTypeConfiguration().Configure(modelBuilder.Entity<Class>());
             new StudentEntityTypeConfiguration().Configure(modelBuilder.Entity<Student>());
             new EnrollmentEntityTypeConfiguration().Configure(modelBuilder.Entity<Enrollment>());   
+            new InboxMessageEntityTypeConfiguration().Configure(modelBuilder.Entity<InboxMessage>());   
         }
     }
 }

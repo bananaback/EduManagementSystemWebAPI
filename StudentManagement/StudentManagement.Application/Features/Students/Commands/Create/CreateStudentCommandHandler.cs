@@ -3,10 +3,12 @@ using StudentManagement.Application.Commons.Interfaces;
 using StudentManagement.Application.Commons.Interfaces.Repositories;
 using StudentManagement.Application.Exceptions;
 using StudentManagement.Domain.Entities;
+using StudentManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace StudentManagement.Application.Features.Students.Commands.Create
@@ -14,10 +16,12 @@ namespace StudentManagement.Application.Features.Students.Commands.Create
     public class CreateStudentCommandHandler : IRequestHandler<CreateStudentCommand, Guid>
     {
         private readonly IStudentRepository _studentRepository;
+        private readonly IOutboxRepository _outboxMessageRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public CreateStudentCommandHandler(IStudentRepository studentRepository, IUnitOfWork unitOfWork)
+        public CreateStudentCommandHandler(IStudentRepository studentRepository, IOutboxRepository outboxRepository, IUnitOfWork unitOfWork)
         {
             _studentRepository = studentRepository;
+            _outboxMessageRepository = outboxRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -37,6 +41,18 @@ namespace StudentManagement.Application.Features.Students.Commands.Create
             );
 
             await _studentRepository.AddAsync(newStudent, cancellationToken);
+
+            try
+            {
+                var message = new OutboxMessage(MessageType.STUDENTCREATED, JsonSerializer.Serialize(newStudent));
+
+                await _outboxMessageRepository.AddAsync(message, cancellationToken);
+
+            }
+            catch (NotSupportedException ex)
+            {
+                throw new StudentCreationException($"Failed to create student. {ex.Message}");
+            }
 
             var res = await _unitOfWork.SaveChangesAsync(cancellationToken);
 

@@ -61,18 +61,11 @@ namespace AuthenticationService.Tests.Application.Features.Register
             _unitOfWorkMock.Setup(uow => uow.SaveChangesAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);  // Simulate successful save
 
-            var expectedUserId = Guid.NewGuid();
-            _userRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()))
-                .Callback<ApplicationUser, CancellationToken>((user, cancellationToken) =>
-                {
-                    user.Id = expectedUserId;
-                });
-
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
             // Assert
-            result.Should().Be(expectedUserId);
+            result.Should().NotBe(Guid.Empty);
             _userRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()), Times.Once);
             _unitOfWorkMock.Verify(uow => uow.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }

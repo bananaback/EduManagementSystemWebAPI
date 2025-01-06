@@ -16,6 +16,8 @@ namespace AuthenticationService.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("refresh_tokens");
 
+            builder.Ignore(rt => rt.DomainEvents);
+
             builder.HasKey(rt => rt.Id);
 
             builder.Property(rt => rt.Id)

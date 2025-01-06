@@ -1,4 +1,5 @@
-﻿using AuthenticationService.Domain.ValueObjects;
+﻿using AuthenticationService.Domain.Common;
+using AuthenticationService.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Domain.Entities
 {
-    public class RefreshToken
+    public class RefreshToken : BaseEntity
     {
-        public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
         public TokenValue Token { get; set; } = null!;

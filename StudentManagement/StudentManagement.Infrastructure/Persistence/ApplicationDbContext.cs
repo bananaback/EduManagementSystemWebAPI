@@ -13,6 +13,7 @@ namespace StudentManagement.Infrastructure.Persistence
     public class ApplicationDbContext : DbContext
     {
         public DbSet<Student> Students { get; set; }
+        public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -24,6 +25,7 @@ namespace StudentManagement.Infrastructure.Persistence
             base.OnModelCreating(modelBuilder);
 
             new StudentEntityTypeConfiguration().Configure(modelBuilder.Entity<Student>());
+            new OutboxMessageEntityTypeConfiguration().Configure(modelBuilder.Entity<OutboxMessage>());
         }
     }
 }

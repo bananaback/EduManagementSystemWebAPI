@@ -10,6 +10,7 @@ using ClassManagement.Application.Features.Students.Commands.Delete;
 using ClassManagement.Application.Features.Students.Commands.Edit;
 using ClassManagement.Application.Features.Students.Queries.GetAll;
 using ClassManagement.Application.Features.Students.Queries.GetById;
+using ClassManagement.Domain.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,14 +46,24 @@ namespace ClassManagement.API.Controllers
             return Ok(students);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateStudentAsync([FromBody] CreateStudentRequest request, CancellationToken cancellationToken = default)
         {
-            /*var command = new CreateStudentCommand
+            if (!ModelState.IsValid)
             {
-                Name = request.Name,
+                return BadRequestModelState();
+            }
+            var command = new CreateStudentCommand
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
                 Email = request.Email,
-                EnrollmentDate = request.EnrollmentDate
+                Gender = request.Gender,
+                DateOfBirth = request.DateOfBirth,
+                EnrollmentDate = request.EnrollmentDate,
+                Address = new Address(request.Address.HouseNumber, request.Address.Street, request.Address.Ward, request.Address.District, request.Address.City),
+                ExposePrivateInfo = request.ExposePrivateInfo
             };
 
             var createdStudentId = await _mediator.Send(command, cancellationToken);
@@ -64,8 +75,7 @@ namespace ClassManagement.API.Controllers
 
             var studentReadDto = await _mediator.Send(readCommand, cancellationToken);
 
-            return CreatedAtRoute(nameof(GetStudentById), new { id = createdStudentId }, studentReadDto);*/
-            throw new NotImplementedException();
+            return CreatedAtRoute(nameof(GetStudentById), new { id = createdStudentId }, studentReadDto);
         }
 
         [HttpGet("{id:guid}", Name = nameof(GetStudentById))]
@@ -84,23 +94,26 @@ namespace ClassManagement.API.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> EditStudentById(Guid id, [FromBody] EditStudentRequest request, CancellationToken cancellationToken = default)
         {
-            /*if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequestModelState();
             }
 
             var command = new EditStudentCommand
             {
-                Id = id,
-                Name = request.Name,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
                 Email = request.Email,
+                Gender = request.Gender,
+                DateOfBirth = request.DateOfBirth,
                 EnrollmentDate = request.EnrollmentDate,
+                Address = (request.Address != null) ? new Address(request.Address.HouseNumber, request.Address.Street, request.Address.Ward, request.Address.District, request.Address.City) : null,
+                ExposePrivateInfo = request.ExposePrivateInfo
             };
 
             var updatedStudentId = await _mediator.Send(command, cancellationToken);
 
-            return Ok($"Edit student with id {id} successfully.");*/
-            throw new NotImplementedException();
+            return Ok($"Edit student with id {id} successfully.");
         }
 
         [HttpDelete("{id:guid}")]

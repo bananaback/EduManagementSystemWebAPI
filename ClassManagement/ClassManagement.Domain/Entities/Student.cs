@@ -25,7 +25,8 @@ namespace ClassManagement.Domain.Entities
 
         public Student(PersonName name, Email email, GenderEnum gender, DateOnly dateOfBirth, DateOnly enrollmentDate, Address address, bool exposePrivateInfo)
         {
-            if (dateOfBirth.Year - DateTime.Now.Year > 100 || dateOfBirth.Year - DateTime.Now.Year < 5)
+
+            if (DateTime.Now.Year - dateOfBirth.Year > 100 || DateTime.Now.Year - dateOfBirth.Year < 5)
             {
                 throw new ArgumentException("Invalid date of birth");
             }
@@ -37,6 +38,7 @@ namespace ClassManagement.Domain.Entities
 
             Id = Guid.NewGuid();
             Name = name;
+            Email = email;
             Gender = gender;
             DateOfBirth = dateOfBirth;
             EnrollmentDate = enrollmentDate;

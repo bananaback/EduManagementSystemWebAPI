@@ -22,7 +22,8 @@ namespace ClassManagement.Application.Features.Students.Commands.Edit
         }
         public async Task<Guid> Handle(EditStudentCommand command, CancellationToken cancellationToken)
         {
-            var existingStudent = await _studentRepository.GetByIdAsync(command.Id, cancellationToken);
+            return Guid.NewGuid();
+            /*var existingStudent = await _studentRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (existingStudent == null)
             {
@@ -45,7 +46,7 @@ namespace ClassManagement.Application.Features.Students.Commands.Edit
                 throw new StudentPersistenceException("Failed to save changes while updating student.");
             }
 
-            return command.Id;
+            return command.Id;*/
         }
     }
 }

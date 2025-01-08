@@ -1,4 +1,5 @@
 ﻿using ClassManagement.Domain.Entities;
+using ClassManagement.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -22,15 +23,44 @@ namespace ClassManagement.Infrastructure.Persistence.Configurations
             builder.Property(c => c.Id)
                 .HasColumnName("id");
 
-            builder.Property(c => c.Name)
-                .HasColumnName("name");
+            builder.OwnsOne(c => c.Name, name =>
+            {
+                name.Property(n => n.Value)
+                    .HasColumnName("name")
+                    .HasMaxLength(100)
+                    .IsRequired();
+            });
 
             builder.Property(c => c.StartDate)
-                .HasColumnName("start_date");
-
+                .HasColumnName("start_date")
+                .HasColumnType("date")
+                .IsRequired();
 
             builder.Property(c => c.EndDate)
-                .HasColumnName("end_date");
+                .HasColumnName("end_date")
+                .HasColumnType("date")
+                .IsRequired();
+
+            builder.OwnsOne(c => c.Description, description =>
+            {
+                description.Property(d => d.Value)
+                    .HasColumnName("description")
+                    .HasMaxLength(500)
+                    .IsRequired();
+            });
+
+            builder.Property(c => c.Status)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (ClassStatus)Enum.Parse(typeof(ClassStatus), v)
+                )
+                .HasColumnName("status")
+                .HasMaxLength(50);
+
+            builder.Property(c => c.MaxCapacity)
+                .HasColumnName("max_capacity")
+                .HasColumnType("tinyint")
+                .IsRequired();
 
             builder.HasMany(c => c.Students)
                 .WithMany(s => s.Classes)
@@ -56,11 +86,26 @@ namespace ClassManagement.Infrastructure.Persistence.Configurations
                         
                         j.HasKey(e => new {e.StudentId, e.ClassId});
 
-                        j.Property(j => j.Grade)
-                            .HasColumnName("grade");
+                        j.OwnsOne(e => e.Grade, grade =>
+                        {
+                            grade.Property(g => g.Value)
+                                .HasColumnName("grade")
+                                .HasMaxLength(10)
+                                .IsRequired();
+                        });
 
-                        j.Property(j => j.EnrollmentDate)
-                            .HasColumnName("enrollment_date");
+                        j.Property(e => e.EnrollmentDate)
+                            .HasColumnName("enrollment_date")
+                            .HasColumnType("date")
+                            .IsRequired();
+
+                        j.Property(e => e.Status)
+                            .HasConversion(
+                                v => v.ToString(),
+                                v => (EnrollmentStatus)Enum.Parse(typeof(EnrollmentStatus), v)
+                            )
+                            .HasColumnName("status")
+                            .HasMaxLength(50);
                     }
 
                 );

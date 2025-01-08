@@ -1,36 +1,68 @@
 ﻿using ClassManagement.Domain.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ClassManagement.Domain.Enums;
+using ClassManagement.Domain.ValueObjects;
 
 namespace ClassManagement.Domain.Entities
 {
     public class Student : BaseEntity
     {
-        public string Name { get; private set; } = string.Empty;
-        public string Email { get; private set; } = string.Empty;
+        public PersonName Name { get; private set; } = null!;
+        public Email Email { get; private set; } = null!;
+        public GenderEnum Gender { get; private set; }
+        public DateTime DateOfBirth { get; private set; }
+
         public DateTime EnrollmentDate { get; private set; }
+        public Address Address { get; private set; } = null!;
+
+        public bool ExposePrivateInfo { get; private set; } = false;
+
+
         private readonly List<Enrollment> _enrollments = new List<Enrollment>();
         public IReadOnlyCollection<Enrollment> Enrollments => _enrollments.AsReadOnly();
         public IReadOnlyCollection<Class> Classes = new List<Class>();
 
         public Student() { }
 
-        public Student(string name, string email, DateTime enrollmentDate)
+        public Student(PersonName name, Email email, GenderEnum gender, DateTime dateOfBirth, DateTime enrollmentDate, Address address, bool exposePrivateInfo)
         {
+            if (dateOfBirth.Year - DateTime.Now.Year > 100 || dateOfBirth.Year - DateTime.Now.Year < 5)
+            {
+                throw new ArgumentException("Invalid date of birth");
+            }
+
+            if (enrollmentDate < dateOfBirth)
+            {
+                throw new ArgumentException("Invalid enrollment date");
+            }
+
             Id = Guid.NewGuid();
             Name = name;
-            Email = email;
+            Gender = gender;
+            DateOfBirth = dateOfBirth;
             EnrollmentDate = enrollmentDate;
+            Address = address;
+            ExposePrivateInfo = exposePrivateInfo;
         }
 
-        public void Update(string name, string email, DateTime enrollmentDate)
+        public void AllowPrivateInfo()
         {
-            Name = name;
-            Email = email;
-            EnrollmentDate = enrollmentDate;
+            ExposePrivateInfo = true;
+        }
+
+        public void DisallowPrivateInfo()
+        {
+            ExposePrivateInfo = false;
+        }
+
+        public void Update(PersonName? name = default, Email? email = default, GenderEnum? gender = default, DateTime? dateOfBirth = default, DateTime? enrollmentDate = default, Address? address = default, bool? exposePrivateInfo = default)
+        {
+            if (name != null) Name = name;
+            if (email != null) Email = email;
+            if (gender.HasValue) Gender = gender.Value;
+            if (dateOfBirth.HasValue) DateOfBirth = dateOfBirth.Value;
+            if (enrollmentDate.HasValue) EnrollmentDate = enrollmentDate.Value;
+            if (address != null) Address = address;
+            if (exposePrivateInfo.HasValue) ExposePrivateInfo = exposePrivateInfo.Value;
         }
     }
 }

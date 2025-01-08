@@ -23,7 +23,8 @@ namespace ClassManagement.Application.Features.Classes.Commands.Create
         }
         public async Task<Guid> Handle(CreateClassCommand command, CancellationToken cancellationToken)
         {
-            var existingClassWithName = await _classRepository.GetByNameAsync(command.ClassName, cancellationToken);
+            return Guid.NewGuid();
+            /*var existingClassWithName = await _classRepository.GetByNameAsync(command.ClassName, cancellationToken);
 
             if (existingClassWithName != null)
             {
@@ -45,7 +46,8 @@ namespace ClassManagement.Application.Features.Classes.Commands.Create
                 throw new ClassCreationException("Failed to save changes when creating new class");
             }
 
-            return newClass.Id;
+            return newClass.Id;*/
+
         }
     }
 }

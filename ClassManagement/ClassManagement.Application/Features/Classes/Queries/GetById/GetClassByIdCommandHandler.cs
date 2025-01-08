@@ -20,7 +20,8 @@ namespace ClassManagement.Application.Features.Classes.Queries.GetById
 
         public async Task<ClassReadDto> Handle(GetClassByIdCommand command, CancellationToken cancellationToken)
         {
-            var @class = await _classRepository.GetByIdAsync(command.Id, cancellationToken);
+            return new ClassReadDto { Id = command.Id };
+            /*var @class = await _classRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (@class == null)
             {
@@ -43,7 +44,7 @@ namespace ClassManagement.Application.Features.Classes.Queries.GetById
                         DateEnrolledClass = e.EnrollmentDate
                     }
                 ).ToList(),
-            };
+            };*/
         }
     }
 }

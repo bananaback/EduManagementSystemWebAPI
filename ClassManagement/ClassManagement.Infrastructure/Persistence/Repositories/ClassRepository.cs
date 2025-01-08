@@ -42,7 +42,8 @@ namespace ClassManagement.Infrastructure.Persistence.Repositories
 
         public async Task<Class?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
         {
-            return await _context.Classes.Where(c => c.Name == name).FirstOrDefaultAsync();
+            throw new NotImplementedException();
+            //return await _context.Classes.Where(c => c.Name == name).FirstOrDefaultAsync();
         }
 
         public void Update(Class @class)

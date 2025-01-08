@@ -22,7 +22,8 @@ namespace ClassManagement.Application.Features.Classes.Commands.Edit
 
         public async Task<Guid> Handle(EditClassCommand command, CancellationToken cancellationToken = default)
         {
-            var exitingClass = await _classRepository.GetByIdAsync(command.Id, cancellationToken);
+            return Guid.NewGuid();
+            /*var exitingClass = await _classRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (exitingClass == null)
             {
@@ -38,7 +39,7 @@ namespace ClassManagement.Application.Features.Classes.Commands.Edit
                 throw new ClassPersistenceException($"Failed to save changes while updating class with id {command.Id}");
             }
 
-            return exitingClass.Id;
+            return exitingClass.Id;*/
         }
     }
 }

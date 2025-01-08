@@ -19,7 +19,8 @@ namespace ClassManagement.Application.Features.Classes.Queries.GetAll
 
         public async Task<IReadOnlyCollection<ClassReadDto>> Handle(GetAllClassesCommand request, CancellationToken cancellationToken)
         {
-            var classes = await _classRepository.GetAll();
+            return new List<ClassReadDto>().AsReadOnly();
+            /*var classes = await _classRepository.GetAll();
             
             return classes.Select(
                 c => new ClassReadDto
@@ -29,7 +30,7 @@ namespace ClassManagement.Application.Features.Classes.Queries.GetAll
                     StartDate = c.StartDate,
                     EndDate = c.EndDate
                 }    
-            ).ToList().AsReadOnly();
+            ).ToList().AsReadOnly();*/
         }
     }
 }

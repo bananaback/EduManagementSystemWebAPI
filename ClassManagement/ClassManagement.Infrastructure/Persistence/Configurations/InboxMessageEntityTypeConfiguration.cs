@@ -1,11 +1,6 @@
 ﻿using ClassManagement.Domain.Entities;
 using ClassManagement.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClassManagement.Infrastructure.Persistence.Configurations
 {
@@ -24,7 +19,8 @@ namespace ClassManagement.Infrastructure.Persistence.Configurations
 
             builder.Property(im => im.Type)
                 .HasConversion(v => v.ToString(), v => (MessageType)Enum.Parse(typeof(MessageType), v))
-                .HasColumnName("message_type");
+                .HasColumnName("message_type")
+                .HasMaxLength(50);
 
             builder.Property(im => im.DateCreated)
                 .HasColumnType("datetime2")
@@ -34,7 +30,8 @@ namespace ClassManagement.Infrastructure.Persistence.Configurations
                 .HasColumnType("nvarchar(500)")
                 .HasColumnName("payload");
 
-
+            builder.Property(im => im.Processed)
+                .HasColumnName("processed");
         }
     }
 }

@@ -34,7 +34,8 @@ namespace ClassManagement.Infrastructure.Persistence.Repositories
 
         public async Task<Student?> GetByEmailAsync(string email, CancellationToken cancellationToken)
         {
-            return await _context.Students.Where(s => s.Email == email).FirstOrDefaultAsync();
+            throw new NotImplementedException();
+            //return await _context.Students.Where(s => s.Email == email).FirstOrDefaultAsync();
         }
 
         public async Task<Student?> GetByIdAsync(Guid id, CancellationToken cancellationToken)

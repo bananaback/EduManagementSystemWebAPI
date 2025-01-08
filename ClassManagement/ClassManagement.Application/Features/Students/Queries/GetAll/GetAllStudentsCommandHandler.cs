@@ -17,7 +17,8 @@ namespace ClassManagement.Application.Features.Students.Queries.GetAll
         }
         public async Task<IReadOnlyCollection<StudentReadDto>> Handle(GetAllStudentsCommand request, CancellationToken cancellationToken)
         {
-            var students = await _studentRepository.GetAllAsync(cancellationToken);
+            return new List<StudentReadDto>().AsReadOnly();
+            /*var students = await _studentRepository.GetAllAsync(cancellationToken);
 
             return students.Select(
                 s => new StudentReadDto
@@ -27,7 +28,7 @@ namespace ClassManagement.Application.Features.Students.Queries.GetAll
                     Email = s.Email,
                     DateEnrolled = s.EnrollmentDate
                 }
-            ).ToList().AsReadOnly();
+            ).ToList().AsReadOnly();*/
         }
     }
 }

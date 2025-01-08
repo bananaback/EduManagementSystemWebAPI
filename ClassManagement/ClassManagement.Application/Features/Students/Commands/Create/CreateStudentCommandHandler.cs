@@ -23,7 +23,8 @@ namespace ClassManagement.Application.Features.Students.Commands.Create
 
         public async Task<Guid> Handle(CreateStudentCommand command, CancellationToken cancellationToken = default)
         {
-            var existingStudentWithEmail = await _studentRepository.GetByEmailAsync(command.Email, cancellationToken);
+            return Guid.NewGuid();
+            /*var existingStudentWithEmail = await _studentRepository.GetByEmailAsync(command.Email, cancellationToken);
 
             if (existingStudentWithEmail != null)
             {
@@ -45,7 +46,7 @@ namespace ClassManagement.Application.Features.Students.Commands.Create
                 throw new StudentCreationException($"Failed to save changes while creating student.");
             }
 
-            return newStudent.Id;
+            return newStudent.Id;*/
         }
     }
 }

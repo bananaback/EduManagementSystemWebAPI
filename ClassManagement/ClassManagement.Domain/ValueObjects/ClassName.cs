@@ -32,8 +32,8 @@ namespace ClassManagement.Domain.ValueObjects
                 throw new InvalidClassNameException("Class name must not be more than 100 characters");
             }
 
-            // No special characters or numbers
-            if (!value.All(char.IsLetter))
+            // No special characters or numbers but allow spaces
+            if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^[a-zA-Z\s]*$"))
             {
                 throw new InvalidClassNameException("Class name must not contain special characters or numbers");
             }

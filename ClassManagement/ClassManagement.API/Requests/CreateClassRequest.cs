@@ -1,21 +1,38 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ClassManagement.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClassManagement.API.Requests
 {
     public class CreateClassRequest
     {
         [Required]
-        public string ClassName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+
         [Required]
-        public DateTime StartDate { get; set; }
+        public string Description { get; set; } = string.Empty;
+
         [Required]
-        public DateTime EndDate { get; set; }
+        public DateOnly StartDate { get; set; }
+
+        [Required]
+        public DateOnly EndDate { get; set; }
+
+        [EnumDataType(typeof(ClassStatus), ErrorMessage = "Invalid status value.")]
+        public ClassStatus Status { get; set; }
+
+        [Range(20, 255, ErrorMessage = "MaxCapacity must be between 20 and 255.")]
+        public byte MaxCapacity { get; set; }
+
         public CreateClassRequest() { }
-        public CreateClassRequest(string className, DateTime startDate, DateTime endDate)
+
+        public CreateClassRequest(string name, string description, DateOnly startDate, DateOnly endDate, ClassStatus status, byte maxCapacity)
         {
-            ClassName = className;
+            Name = name;
+            Description = description;
             StartDate = startDate;
             EndDate = endDate;
+            Status = status;
+            MaxCapacity = maxCapacity;
         }
     }
 }

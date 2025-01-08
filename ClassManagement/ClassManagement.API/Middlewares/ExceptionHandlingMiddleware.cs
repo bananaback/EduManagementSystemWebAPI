@@ -1,10 +1,9 @@
-﻿
-using ClassManagement.API.Responses;
+﻿using ClassManagement.API.Responses;
 using ClassManagement.Application.Exceptions;
 using System.Net;
 using System.Text.Json;
 
-namespace ClassManagement.API
+namespace ClassManagement.API.Middlewares
 {
     public class ExceptionHandlingMiddleware
     {

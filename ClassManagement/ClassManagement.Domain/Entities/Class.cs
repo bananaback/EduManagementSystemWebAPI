@@ -13,8 +13,8 @@ namespace ClassManagement.Domain.Entities
     public class Class : BaseEntity
     {
         public ClassName Name { get; private set; } = null!;
-        public DateTime StartDate { get; private set; }
-        public DateTime EndDate { get; private set; }
+        public DateOnly StartDate { get; private set; }
+        public DateOnly EndDate { get; private set; }
 
         public ClassDescription Description { get; private set; } = null!;
         public ClassStatus Status { get; private set; }
@@ -25,7 +25,7 @@ namespace ClassManagement.Domain.Entities
         public IReadOnlyCollection<Student> Students = new List<Student>();
 
         public Class() { }
-        public Class(ClassName name, ClassDescription description, DateTime startDate, DateTime endDate, ClassStatus status, byte maxCapacity)
+        public Class(ClassName name, ClassDescription description, DateOnly startDate, DateOnly endDate, ClassStatus status, byte maxCapacity)
         {
             if (endDate < startDate)
             {
@@ -59,18 +59,18 @@ namespace ClassManagement.Domain.Entities
             }
 
             AddDomainEvent(new StudentEnrolledEvent(this.Id, student.Id));
-            var enrollment = new Enrollment(student, this, DateTime.Now);
+            var enrollment = new Enrollment(student, this, DateOnly.FromDateTime(DateTime.Now));
             _enrollments.Add(enrollment);
         }
 
-        public void Update(ClassName name, ClassDescription description, DateTime startDate, DateTime endDate, ClassStatus status, byte maxCapacity)
+        public void Update(ClassName? name, ClassDescription? description, DateOnly? startDate, DateOnly? endDate, ClassStatus? status, byte? maxCapacity)
         {
-            Name = name;
-            Description = description;
-            StartDate = startDate;
-            EndDate = endDate;
-            Status = status;
-            MaxCapacity = maxCapacity;
+            if (name != null) Name = name;
+            if (description != null) Description = description;
+            if (startDate != null) StartDate = startDate.Value;
+            if (endDate != null) EndDate = endDate.Value;
+            if (status != null) Status = (ClassStatus)status;
+            if (maxCapacity != null) MaxCapacity = (byte)maxCapacity;
         }
     }
 }

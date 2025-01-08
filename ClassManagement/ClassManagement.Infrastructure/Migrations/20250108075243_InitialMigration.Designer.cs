@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClassManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250108033715_InitialMigration")]
+    [Migration("20250108075243_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -32,7 +32,7 @@ namespace ClassManagement.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateOnly>("EndDate")
                         .HasColumnType("date")
                         .HasColumnName("end_date");
 
@@ -40,7 +40,7 @@ namespace ClassManagement.Infrastructure.Migrations
                         .HasColumnType("tinyint")
                         .HasColumnName("max_capacity");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateOnly>("StartDate")
                         .HasColumnType("date")
                         .HasColumnName("start_date");
 
@@ -65,7 +65,7 @@ namespace ClassManagement.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("class_id");
 
-                    b.Property<DateTime>("EnrollmentDate")
+                    b.Property<DateOnly>("EnrollmentDate")
                         .HasColumnType("date")
                         .HasColumnName("enrollment_date");
 
@@ -120,11 +120,11 @@ namespace ClassManagement.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date")
                         .HasColumnName("date_of_birth");
 
-                    b.Property<DateTime>("EnrollmentDate")
+                    b.Property<DateOnly>("EnrollmentDate")
                         .HasColumnType("date")
                         .HasColumnName("enrollment_date");
 

@@ -20,8 +20,7 @@ namespace ClassManagement.Application.Features.Classes.Queries.GetById
 
         public async Task<ClassReadDto> Handle(GetClassByIdCommand command, CancellationToken cancellationToken)
         {
-            return new ClassReadDto { Id = command.Id };
-            /*var @class = await _classRepository.GetByIdAsync(command.Id, cancellationToken);
+            var @class = await _classRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (@class == null)
             {
@@ -31,20 +30,23 @@ namespace ClassManagement.Application.Features.Classes.Queries.GetById
             return new ClassReadDto
             {
                 Id = command.Id,
-                Name = @class.Name,
+                Name = @class.Name.Value,
+                Description = @class.Description.Value,
                 StartDate = @class.StartDate,
                 EndDate = @class.EndDate,
+                ClassStatus = @class.Status,
+                MaxCapacity = @class.MaxCapacity,
                 EnrolledStudents = @class.Enrollments.Select(
                     e => new EnrollmentReadDto
                     {
                         StudentId = e.Student.Id,
-                        Name = e.Student.Name,
-                        Email = e.Student.Email,
+                        Name = e.Student.Name.FullName,
+                        Email = (e.Student.ExposePrivateInfo) ? e.Student.Email.Value : "secret",
                         DateEnrolled = e.Student.EnrollmentDate,
                         DateEnrolledClass = e.EnrollmentDate
                     }
                 ).ToList(),
-            };*/
+            };
         }
     }
 }

@@ -17,8 +17,8 @@ namespace ClassManagement.Infrastructure.Migrations
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    start_date = table.Column<DateTime>(type: "date", nullable: false),
-                    end_date = table.Column<DateTime>(type: "date", nullable: false),
+                    start_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    end_date = table.Column<DateOnly>(type: "date", nullable: false),
                     description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     max_capacity = table.Column<byte>(type: "tinyint", nullable: false)
@@ -52,8 +52,8 @@ namespace ClassManagement.Infrastructure.Migrations
                     last_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     email = table.Column<string>(type: "nvarchar(254)", maxLength: 254, nullable: false),
                     gender = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    date_of_birth = table.Column<DateTime>(type: "date", nullable: false),
-                    enrollment_date = table.Column<DateTime>(type: "date", nullable: false),
+                    date_of_birth = table.Column<DateOnly>(type: "date", nullable: false),
+                    enrollment_date = table.Column<DateOnly>(type: "date", nullable: false),
                     house_number = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     street = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ward = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -73,7 +73,7 @@ namespace ClassManagement.Infrastructure.Migrations
                     student_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     class_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     grade = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    enrollment_date = table.Column<DateTime>(type: "date", nullable: false),
+                    enrollment_date = table.Column<DateOnly>(type: "date", nullable: false),
                     status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>

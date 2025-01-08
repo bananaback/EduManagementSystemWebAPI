@@ -55,6 +55,7 @@ namespace ClassManagement.Infrastructure
 
             services.AddScoped<IClassRepository, ClassRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
             services.AddScoped<IMessageSender, HttpMessageSender>();
             services.AddScoped<IInboxMessageRepository, InboxMessageRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

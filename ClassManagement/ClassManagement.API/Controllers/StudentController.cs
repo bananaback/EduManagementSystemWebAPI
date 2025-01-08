@@ -48,7 +48,7 @@ namespace ClassManagement.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStudentAsync([FromBody] CreateStudentRequest request, CancellationToken cancellationToken = default)
         {
-            var command = new CreateStudentCommand
+            /*var command = new CreateStudentCommand
             {
                 Name = request.Name,
                 Email = request.Email,
@@ -64,7 +64,8 @@ namespace ClassManagement.API.Controllers
 
             var studentReadDto = await _mediator.Send(readCommand, cancellationToken);
 
-            return CreatedAtRoute(nameof(GetStudentById), new { id = createdStudentId }, studentReadDto);
+            return CreatedAtRoute(nameof(GetStudentById), new { id = createdStudentId }, studentReadDto);*/
+            throw new NotImplementedException();
         }
 
         [HttpGet("{id:guid}", Name = nameof(GetStudentById))]
@@ -83,7 +84,7 @@ namespace ClassManagement.API.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> EditStudentById(Guid id, [FromBody] EditStudentRequest request, CancellationToken cancellationToken = default)
         {
-            if (!ModelState.IsValid)
+            /*if (!ModelState.IsValid)
             {
                 return BadRequestModelState();
             }
@@ -98,7 +99,8 @@ namespace ClassManagement.API.Controllers
 
             var updatedStudentId = await _mediator.Send(command, cancellationToken);
 
-            return Ok($"Edit student with id {id} successfully.");
+            return Ok($"Edit student with id {id} successfully.");*/
+            throw new NotImplementedException();
         }
 
         [HttpDelete("{id:guid}")]

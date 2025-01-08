@@ -17,18 +17,19 @@ namespace ClassManagement.Application.Features.Students.Queries.GetAll
         }
         public async Task<IReadOnlyCollection<StudentReadDto>> Handle(GetAllStudentsCommand request, CancellationToken cancellationToken)
         {
-            return new List<StudentReadDto>().AsReadOnly();
-            /*var students = await _studentRepository.GetAllAsync(cancellationToken);
+            var students = await _studentRepository.GetAllAsync(cancellationToken);
 
             return students.Select(
-                s => new StudentReadDto
+                student => new StudentReadDto
                 {
-                    Id = s.Id,
-                    Name = s.Name,
-                    Email = s.Email,
-                    DateEnrolled = s.EnrollmentDate
+                    Id = student.Id,
+                    Name = student.ExposePrivateInfo ? student.Name.FullName : "secret",
+                    Email = student.ExposePrivateInfo ? student.Email.Value : "secret",
+                    DateOfBirth = student.ExposePrivateInfo ? student.DateOfBirth : DateOnly.MinValue,
+                    DateEnrolled = student.EnrollmentDate,
+                    Address = student.ExposePrivateInfo ? student.Address.GetFullAddress() : "secret"
                 }
-            ).ToList().AsReadOnly();*/
+            ).ToList().AsReadOnly();
         }
     }
 }

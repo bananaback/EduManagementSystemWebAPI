@@ -1,5 +1,6 @@
 ﻿using ClassManagement.Application.Features.Classes.Queries.GetById;
 using ClassManagement.Application.Features.Students.Queries;
+using ClassManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,11 @@ namespace ClassManagement.Application.Features.Classes.Queries
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
+        public ClassStatus ClassStatus { get; set; }
+        public byte MaxCapacity { get; set; }
         public List<EnrollmentReadDto> EnrolledStudents { get; set; } = new List<EnrollmentReadDto>();
     }
 }

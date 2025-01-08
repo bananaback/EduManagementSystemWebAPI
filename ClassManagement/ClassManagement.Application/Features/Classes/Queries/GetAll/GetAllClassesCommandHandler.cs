@@ -17,20 +17,32 @@ namespace ClassManagement.Application.Features.Classes.Queries.GetAll
             _classRepository = classRepository;
         }
 
-        public async Task<IReadOnlyCollection<ClassReadDto>> Handle(GetAllClassesCommand request, CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<ClassReadDto>> Handle(GetAllClassesCommand command, CancellationToken cancellationToken)
         {
-            return new List<ClassReadDto>().AsReadOnly();
-            /*var classes = await _classRepository.GetAll();
-            
+            var classes = await _classRepository.SearchAsync(
+                command.PageNumber!.Value,
+                command.ItemsPerPage!.Value,
+                command.Id, 
+                command.Name,
+                command.Description, 
+                command.StartDate, 
+                command.EndDate, 
+                command.Status, 
+                command.MaxCapacity,
+                cancellationToken);
+
             return classes.Select(
                 c => new ClassReadDto
                 {
                     Id = c.Id,
-                    Name = c.Name,
+                    Name = c.Name.Value,
+                    Description = c.Description.Value,
                     StartDate = c.StartDate,
-                    EndDate = c.EndDate
-                }    
-            ).ToList().AsReadOnly();*/
+                    EndDate = c.EndDate,
+                    ClassStatus = c.Status,
+                    MaxCapacity = c.MaxCapacity
+                }
+            ).ToList().AsReadOnly();
         }
     }
 }

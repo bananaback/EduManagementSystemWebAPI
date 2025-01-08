@@ -2,6 +2,7 @@
 using ClassManagement.Application.Common.Interfaces.Repositories;
 using ClassManagement.Application.Exceptions;
 using ClassManagement.Domain.Entities;
+using ClassManagement.Domain.ValueObjects;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -23,18 +24,20 @@ namespace ClassManagement.Application.Features.Classes.Commands.Create
         }
         public async Task<Guid> Handle(CreateClassCommand command, CancellationToken cancellationToken)
         {
-            return Guid.NewGuid();
-            /*var existingClassWithName = await _classRepository.GetByNameAsync(command.ClassName, cancellationToken);
+            var existingClassWithName = await _classRepository.GetByNameAsync(command.Name, cancellationToken);
 
             if (existingClassWithName != null)
             {
-                throw new ClassCreationException($"Class with name {command.ClassName} already exist.");
+                throw new ClassCreationException($"Class with name {command.Name} already exist.");
             }
 
             var newClass = new Class(
-                command.ClassName,
+                new ClassName(command.Name),
+                new ClassDescription(command.Description),
                 command.StartDate,
-                command.EndDate
+                command.EndDate,
+                command.Status,
+                command.MaxCapacity
             );
 
             await _classRepository.AddAsync(newClass, cancellationToken);
@@ -46,7 +49,7 @@ namespace ClassManagement.Application.Features.Classes.Commands.Create
                 throw new ClassCreationException("Failed to save changes when creating new class");
             }
 
-            return newClass.Id;*/
+            return newClass.Id;
 
         }
     }

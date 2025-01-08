@@ -1,6 +1,7 @@
 ﻿using ClassManagement.Application.Common.Interfaces;
 using ClassManagement.Application.Common.Interfaces.Repositories;
 using ClassManagement.Application.Exceptions;
+using ClassManagement.Domain.ValueObjects;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -22,22 +23,35 @@ namespace ClassManagement.Application.Features.Students.Commands.Edit
         }
         public async Task<Guid> Handle(EditStudentCommand command, CancellationToken cancellationToken)
         {
-            return Guid.NewGuid();
-            /*var existingStudent = await _studentRepository.GetByIdAsync(command.Id, cancellationToken);
+            var existingStudent = await _studentRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (existingStudent == null)
             {
                 throw new StudentRetrievalException($"Student with id {command.Id} do not exist");
             }
 
-            if (existingStudent.Name == command.Name
-                && existingStudent.Email == command.Email
-                && existingStudent.EnrollmentDate == command.EnrollmentDate)
+            var personName = (PersonName?)null;
+            var email = (Email?)null;
+
+            if (command.Email != null)
             {
-                return command.Id;
+                var existingStudentByEmail = await _studentRepository.GetByEmailAsync(command.Email, cancellationToken);
+
+                if (existingStudentByEmail != null)
+                {
+                    throw new StudentPersistenceException($"Student with email {command.Email} already exist.");
+                }
+
+                email = new Email(command.Email);
+            }
+           
+
+            if (command.FirstName != null || command.LastName != null)
+            {
+                personName = new PersonName(command.FirstName!, command.LastName!);
             }
 
-            existingStudent.Update(command.Name, command.Email, command.EnrollmentDate);
+            existingStudent.Update(personName, email, command.Gender, command.DateOfBirth, command.EnrollmentDate, command.Address, command.ExposePrivateInfo);
 
             var res = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -46,7 +60,7 @@ namespace ClassManagement.Application.Features.Students.Commands.Edit
                 throw new StudentPersistenceException("Failed to save changes while updating student.");
             }
 
-            return command.Id;*/
+            return command.Id;
         }
     }
 }

@@ -18,8 +18,7 @@ namespace ClassManagement.Application.Features.Students.Queries.GetById
         }
         public async Task<StudentReadDto> Handle(GetStudentByIdCommand command, CancellationToken cancellationToken = default)
         {
-            return new StudentReadDto();
-            /*var student = await _studentRepository.GetByIdAsync(command.Id, cancellationToken);
+            var student = await _studentRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (student == null)
             {
@@ -29,10 +28,12 @@ namespace ClassManagement.Application.Features.Students.Queries.GetById
             return new StudentReadDto
             {
                 Id = student.Id,
-                Name = student.Name,
-                Email = student.Email,
-                DateEnrolled = student.EnrollmentDate
-            };*/
+                Name = student.ExposePrivateInfo ? student.Name.FullName : "secret",
+                Email = student.ExposePrivateInfo ? student.Email.Value : "secret",
+                DateOfBirth = student.ExposePrivateInfo ? student.DateOfBirth : DateOnly.MinValue,
+                DateEnrolled = student.EnrollmentDate,
+                Address = student.ExposePrivateInfo ? student.Address.GetFullAddress() : "secret"
+            };
         }
     }
 }

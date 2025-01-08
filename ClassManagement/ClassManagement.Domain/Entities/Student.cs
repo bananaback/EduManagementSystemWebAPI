@@ -9,9 +9,9 @@ namespace ClassManagement.Domain.Entities
         public PersonName Name { get; private set; } = null!;
         public Email Email { get; private set; } = null!;
         public GenderEnum Gender { get; private set; }
-        public DateTime DateOfBirth { get; private set; }
+        public DateOnly DateOfBirth { get; private set; }
 
-        public DateTime EnrollmentDate { get; private set; }
+        public DateOnly EnrollmentDate { get; private set; }
         public Address Address { get; private set; } = null!;
 
         public bool ExposePrivateInfo { get; private set; } = false;
@@ -23,7 +23,7 @@ namespace ClassManagement.Domain.Entities
 
         public Student() { }
 
-        public Student(PersonName name, Email email, GenderEnum gender, DateTime dateOfBirth, DateTime enrollmentDate, Address address, bool exposePrivateInfo)
+        public Student(PersonName name, Email email, GenderEnum gender, DateOnly dateOfBirth, DateOnly enrollmentDate, Address address, bool exposePrivateInfo)
         {
             if (dateOfBirth.Year - DateTime.Now.Year > 100 || dateOfBirth.Year - DateTime.Now.Year < 5)
             {
@@ -54,7 +54,7 @@ namespace ClassManagement.Domain.Entities
             ExposePrivateInfo = false;
         }
 
-        public void Update(PersonName? name = default, Email? email = default, GenderEnum? gender = default, DateTime? dateOfBirth = default, DateTime? enrollmentDate = default, Address? address = default, bool? exposePrivateInfo = default)
+        public void Update(PersonName? name = default, Email? email = default, GenderEnum? gender = default, DateOnly? dateOfBirth = default, DateOnly? enrollmentDate = default, Address? address = default, bool? exposePrivateInfo = default)
         {
             if (name != null) Name = name;
             if (email != null) Email = email;

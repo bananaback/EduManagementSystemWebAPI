@@ -16,11 +16,11 @@ namespace ClassManagement.Domain.Entities
         public Guid ClassId { get; private set; }
         public Class Class { get; private set; } = null!;
         public Grade Grade { get; private set; } = null!;
-        public DateTime EnrollmentDate { get; private set; }
+        public DateOnly EnrollmentDate { get; private set; }
         public EnrollmentStatus Status { get; private set; } = EnrollmentStatus.ACTIVE;
 
         public Enrollment() { }
-        public Enrollment(Student student, Class @class, DateTime enrollmentDate, Grade? grade = default)
+        public Enrollment(Student student, Class @class, DateOnly enrollmentDate, Grade? grade = default)
         {
             if (enrollmentDate > @class.StartDate || enrollmentDate < @class.StartDate.AddDays(-14))
             {
@@ -36,11 +36,21 @@ namespace ClassManagement.Domain.Entities
             Grade = grade ?? new Grade("N/A");
         }
 
-        public void Update(Grade grade)
+        public void Update(Grade? grade, DateOnly? enrollmentDate, EnrollmentStatus? status)
         {
-            if (Grade != grade)
+            if (grade != null && Grade != grade)
             {
                 Grade = grade;
+            }
+            
+            if (enrollmentDate != null && enrollmentDate > Class.StartDate || enrollmentDate < Class.StartDate.AddDays(-14))
+            {
+                EnrollmentDate = enrollmentDate.Value;
+            }
+
+            if (status != null)
+            {
+                Status = status.Value;
             }
         }
     }

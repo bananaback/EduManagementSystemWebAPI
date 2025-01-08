@@ -1,4 +1,4 @@
-using ClassManagement.API;
+using ClassManagement.API.Middlewares;
 using ClassManagement.Application;
 using ClassManagement.Infrastructure;
 using ClassManagement.Infrastructure.Services.Authentication;

@@ -6,6 +6,7 @@ using ClassManagement.Application.Features.Classes.Commands.Edit;
 using ClassManagement.Application.Features.Classes.Commands.EnrollStudent;
 using ClassManagement.Application.Features.Classes.Queries.GetAll;
 using ClassManagement.Application.Features.Classes.Queries.GetById;
+using ClassManagement.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,7 @@ namespace ClassManagement.API.Controllers
             return Ok("Endpoint reached!");
         }
 
+        [AllowAnonymous]
         [HttpPost("")]
         public async Task<IActionResult> CreateClass([FromBody] CreateClassRequest request, CancellationToken cancellationToken = default)
         {
@@ -40,9 +42,12 @@ namespace ClassManagement.API.Controllers
 
             var command = new CreateClassCommand
             {
-                ClassName = request.ClassName,
+                Name = request.Name,
+                Description = request.Description,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
+                Status = request.Status,
+                MaxCapacity = request.MaxCapacity
             };
 
             var classId = await _mediator.Send(command, cancellationToken);
@@ -57,6 +62,7 @@ namespace ClassManagement.API.Controllers
             return CreatedAtRoute(nameof(GetClassById), new { id = classId }, classReadDto);
         }
 
+        [AllowAnonymous]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> EditClassById(Guid id, [FromBody] EditClassRequest request, CancellationToken cancellationToken = default)
         {
@@ -65,12 +71,20 @@ namespace ClassManagement.API.Controllers
                 return BadRequestModelState();
             }
 
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
+            }
+
             var command = new EditClassCommand
             {
                 Id = id,
                 Name = request.Name,
+                Description = request.Description,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
+                Status = request.Status,
+                MaxCapacity = request.MaxCapacity
             };
 
             var updatedClassId = await _mediator.Send(command, cancellationToken);
@@ -93,10 +107,32 @@ namespace ClassManagement.API.Controllers
             return NoContent();
         }
 
+        [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetAllClasses(CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetAllClasses(
+            Guid? id = null,
+            string? name = null,
+            string? description = null,
+            DateOnly? startDate = null,
+            DateOnly? endDate = null,
+            ClassStatus? status = null,
+            byte? maxCapacity = null,
+            int? pageNumber = 1,
+            int? itemsPerPage = 5,
+            CancellationToken cancellationToken = default)
         {
-            var command = new GetAllClassesCommand();
+            var command = new GetAllClassesCommand
+            {
+                Id = id,
+                Name = name,
+                Description = description,
+                StartDate = startDate,
+                EndDate = endDate,
+                Status = status,
+                MaxCapacity = maxCapacity,
+                PageNumber = pageNumber,
+                ItemsPerPage = itemsPerPage
+            };
 
             var classReadDtos = await _mediator.Send(command, cancellationToken);
 

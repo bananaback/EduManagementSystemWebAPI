@@ -89,7 +89,7 @@ namespace ClassManagement.Domain.ValueObjects
 
         public string GetFullAddress()
         {
-            return $"{HouseNumber}, {Street}, Ward {Ward}, District {District}, {City}";
+            return $"{HouseNumber}, {Street}, {Ward}, {District}, {City}";
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

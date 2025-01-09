@@ -35,6 +35,7 @@ namespace ClassManagement.API.Controllers
             return Ok("Endpoint reached!");
         }
 
+        [AllowAnonymous]
         [HttpGet]
 
         public async Task<IActionResult> GetAllStudentsAsync(CancellationToken cancellationToken = default)
@@ -54,6 +55,7 @@ namespace ClassManagement.API.Controllers
             {
                 return BadRequestModelState();
             }
+
             var command = new CreateStudentCommand
             {
                 FirstName = request.FirstName,
@@ -78,6 +80,7 @@ namespace ClassManagement.API.Controllers
             return CreatedAtRoute(nameof(GetStudentById), new { id = createdStudentId }, studentReadDto);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:guid}", Name = nameof(GetStudentById))]
         public async Task<IActionResult> GetStudentById(Guid id, CancellationToken cancellationToken = default)
         {
@@ -91,6 +94,7 @@ namespace ClassManagement.API.Controllers
             return Ok(studentReadDto);
         }
 
+        [AllowAnonymous]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> EditStudentById(Guid id, [FromBody] EditStudentRequest request, CancellationToken cancellationToken = default)
         {
@@ -101,6 +105,7 @@ namespace ClassManagement.API.Controllers
 
             var command = new EditStudentCommand
             {
+                Id = id,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Email = request.Email,
@@ -116,6 +121,7 @@ namespace ClassManagement.API.Controllers
             return Ok($"Edit student with id {id} successfully.");
         }
 
+        [AllowAnonymous]
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteStudentById(Guid id, CancellationToken cancellationToken = default)
         {

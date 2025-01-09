@@ -1,4 +1,5 @@
 using ClassManagement.API.Middlewares;
+using ClassManagement.API.Validators;
 using ClassManagement.Application;
 using ClassManagement.Infrastructure;
 using ClassManagement.Infrastructure.Services.Authentication;
@@ -36,6 +37,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
+builder.Services.AddSingleton<RequestValidator>();
 
 // Register Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ClassManagement.API.Requests
 {
-    public class CreateClassRequest
+    public class CreateClassRequest : ValidatableRequest
     {
         [Required]
         public string Name { get; set; } = string.Empty;
@@ -33,6 +33,11 @@ namespace ClassManagement.API.Requests
             EndDate = endDate;
             Status = status;
             MaxCapacity = maxCapacity;
+        }
+
+        protected override void Validate()
+        {
+            ValidateProperties();
         }
     }
 }

@@ -1,4 +1,5 @@
 using AuthenticationService.API;
+using AuthenticationService.API.Validators;
 using AuthenticationService.Infrastructure;
 using AuthenticationService.Infrastructure.Services.TokenGenerators;
 using Serilog;
@@ -26,6 +27,8 @@ builder.Services.AddCors(options =>
               .AllowCredentials(); // Allow cookies or Authorization headers
     });
 });
+
+builder.Services.AddSingleton<RequestValidator>();
 
 builder.Services.AddControllers();
 

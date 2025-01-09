@@ -1,5 +1,6 @@
 ﻿using AuthenticationService.API.Requests;
 using AuthenticationService.API.Responses;
+using AuthenticationService.API.Validators;
 using AuthenticationService.Application.Features.Login;
 using AuthenticationService.Application.Features.LogoutUser;
 using AuthenticationService.Application.Features.Register;
@@ -15,9 +16,11 @@ namespace AuthenticationService.API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public AuthenticationController(IMediator mediator)
+        private readonly RequestValidator _requestValidator;
+        public AuthenticationController(IMediator mediator, RequestValidator requestValidator)
         {
             _mediator = mediator;
+            _requestValidator = requestValidator ?? throw new ArgumentException(nameof(requestValidator));  
         }
 
         [HttpPost("register")]
@@ -27,6 +30,13 @@ namespace AuthenticationService.API.Controllers
             {
                 return BadRequestModelState();
             }
+
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
+            }
+
+            request.Initialize(_requestValidator);
 
             if (request.Password != request.ConfirmPassword)
             {
@@ -51,6 +61,13 @@ namespace AuthenticationService.API.Controllers
             {
                 return BadRequestModelState();
             }
+
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
+            }
+
+            request.Initialize(_requestValidator);
 
             if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
             {
@@ -86,6 +103,11 @@ namespace AuthenticationService.API.Controllers
                 return BadRequestModelState();
             }
 
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
+            }
+
             var command = new RotateTokenCommand(request.RefreshToken);
 
             var res = await _mediator.Send(command, cancellationToken);
@@ -112,6 +134,11 @@ namespace AuthenticationService.API.Controllers
                 return BadRequestModelState();
             }
 
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
+            }
+
             var command = new LogoutUserCommand(request.RefreshToken);
 
             var res = await _mediator.Send(command, cancellationToken);
@@ -132,6 +159,11 @@ namespace AuthenticationService.API.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequestModelState();
+            }
+
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
             }
 
             var command = new LogoutUserAllDevicesCommand(request.RefreshToken);

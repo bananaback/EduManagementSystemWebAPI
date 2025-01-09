@@ -1,5 +1,6 @@
 ﻿using ClassManagement.API.Requests;
 using ClassManagement.API.Responses;
+using ClassManagement.API.Validators;
 using ClassManagement.Application.Features.Classes.Commands.Create;
 using ClassManagement.Application.Features.Classes.Commands.Delete;
 using ClassManagement.Application.Features.Classes.Commands.Edit;
@@ -20,10 +21,12 @@ namespace ClassManagement.API.Controllers
     public class ClassController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly RequestValidator _requestValidator;
 
-        public ClassController(IMediator mediator)
+        public ClassController(IMediator mediator, RequestValidator requestValidator)
         {
             _mediator = mediator;
+            _requestValidator = requestValidator ?? throw new ArgumentException(nameof(requestValidator));
         }
         [HttpGet("test")]
         public IActionResult Get()
@@ -39,6 +42,8 @@ namespace ClassManagement.API.Controllers
             {
                 return BadRequestModelState();
             }
+
+            request.Initialize(_requestValidator);
 
             var command = new CreateClassCommand
             {

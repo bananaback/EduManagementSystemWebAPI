@@ -9,13 +9,10 @@ namespace ClassManagement.Application.Features.Classes.Queries.GetById
     public class GetClassByIdCommandHandler : IRequestHandler<GetClassByIdCommand, ClassReadDto>
     {
         private readonly IClassRepository _classRepository;
-        private readonly IUnitOfWork _unitOfWork;
         public GetClassByIdCommandHandler(
-            IClassRepository classRepository,
-            IUnitOfWork unitOfWork)
+            IClassRepository classRepository)
         {
             _classRepository = classRepository;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<ClassReadDto> Handle(GetClassByIdCommand command, CancellationToken cancellationToken)

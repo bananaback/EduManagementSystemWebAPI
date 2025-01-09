@@ -18,7 +18,7 @@ namespace ClassManagement.Domain.ValueObjects
         {
             if (value == null)
             {
-                value = "N/A";
+                throw new InvalidGradeException("Grade must not be null");
             }
 
             value = value.ToUpper();
@@ -35,7 +35,7 @@ namespace ClassManagement.Domain.ValueObjects
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            throw new NotImplementedException();
+            yield return Value;
         }
     }
 }

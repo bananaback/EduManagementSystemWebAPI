@@ -1,10 +1,5 @@
 ﻿using ClassManagement.Application.Common.Interfaces.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClassManagement.Application.Features.Students.Queries.GetAll
 {
@@ -15,9 +10,25 @@ namespace ClassManagement.Application.Features.Students.Queries.GetAll
         {
             _studentRepository = studentRepository;
         }
-        public async Task<IReadOnlyCollection<StudentReadDto>> Handle(GetAllStudentsCommand request, CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<StudentReadDto>> Handle(GetAllStudentsCommand command, CancellationToken cancellationToken)
         {
-            var students = await _studentRepository.GetAllAsync(cancellationToken);
+            var students = await _studentRepository.GetAllAsync(
+                command.PageNumber!.Value,
+                command.ItemsPerPage!.Value,
+                command.Id,
+                command.FirstName,
+                command.LastName,
+                command.Email,
+                command.DateOfBirthBefore,
+                command.DateOfBirthAfter,
+                command.EnrollmentDateBefore,
+                command.EnrollmentDateAfter,
+                command.HouseNumber,
+                command.Street,
+                command.Ward,
+                command.District,
+                command.City,
+                cancellationToken);
 
             return students.Select(
                 student => new StudentReadDto

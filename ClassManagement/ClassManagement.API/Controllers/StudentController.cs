@@ -1,20 +1,15 @@
 ﻿using ClassManagement.API.Requests;
 using ClassManagement.API.Responses;
-using ClassManagement.Application.Features.Classes.Commands.Create;
-using ClassManagement.Application.Features.Classes.Commands.Delete;
-using ClassManagement.Application.Features.Classes.Commands.Edit;
-using ClassManagement.Application.Features.Classes.Queries.GetAll;
-using ClassManagement.Application.Features.Classes.Queries.GetById;
 using ClassManagement.Application.Features.Students.Commands.Create;
 using ClassManagement.Application.Features.Students.Commands.Delete;
 using ClassManagement.Application.Features.Students.Commands.Edit;
 using ClassManagement.Application.Features.Students.Queries.GetAll;
 using ClassManagement.Application.Features.Students.Queries.GetById;
+using ClassManagement.Domain.Enums;
 using ClassManagement.Domain.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
 
 namespace ClassManagement.API.Controllers
 {
@@ -38,9 +33,44 @@ namespace ClassManagement.API.Controllers
         [AllowAnonymous]
         [HttpGet]
 
-        public async Task<IActionResult> GetAllStudentsAsync(CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetAllStudentsAsync(
+            Guid? id = null,
+            string? firstName = null,
+            string? lastName = null,
+            string? email = null,
+            GenderEnum? gender = null,
+            DateOnly? dateOfBirthBefore = null,
+            DateOnly? dateOfBirthAfter = null,
+            DateOnly? enrollmentDateBefore = null,
+            DateOnly? enrollmentDateAfter = null,
+            string? houseNumber = null,
+            string? street = null,
+            string? ward = null,
+            string? district = null,
+            string? city = null,
+            int? pageNumber = 1,
+            int? itemsPerPage = 5,
+            CancellationToken cancellationToken = default)
         {
-            var command = new GetAllStudentsCommand();
+            var command = new GetAllStudentsCommand
+            {
+                Id = id,
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Gender = gender,
+                DateOfBirthBefore = dateOfBirthBefore,
+                DateOfBirthAfter = dateOfBirthAfter,
+                EnrollmentDateBefore = enrollmentDateBefore,
+                EnrollmentDateAfter = enrollmentDateAfter,
+                HouseNumber = houseNumber,
+                Street = street,
+                Ward = ward,
+                District = district,
+                City = city,
+                PageNumber = pageNumber,
+                ItemsPerPage = itemsPerPage
+            };
 
             var students = await _mediator.Send(command, cancellationToken);
 

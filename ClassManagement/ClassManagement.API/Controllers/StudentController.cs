@@ -52,6 +52,11 @@ namespace ClassManagement.API.Controllers
             int? itemsPerPage = 5,
             CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
             var command = new GetAllStudentsCommand
             {
                 Id = id,
@@ -86,6 +91,11 @@ namespace ClassManagement.API.Controllers
                 return BadRequestModelState();
             }
 
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
+            }
+
             var command = new CreateStudentCommand
             {
                 FirstName = request.FirstName,
@@ -114,6 +124,11 @@ namespace ClassManagement.API.Controllers
         [HttpGet("{id:guid}", Name = nameof(GetStudentById))]
         public async Task<IActionResult> GetStudentById(Guid id, CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
             var command = new GetStudentByIdCommand
             {
                 Id = id
@@ -131,6 +146,11 @@ namespace ClassManagement.API.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequestModelState();
+            }
+
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
             }
 
             var command = new EditStudentCommand
@@ -155,6 +175,11 @@ namespace ClassManagement.API.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteStudentById(Guid id, CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
             var command = new DeleteStudentCommand
             {
                 Id = id

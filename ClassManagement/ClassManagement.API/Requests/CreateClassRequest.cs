@@ -1,5 +1,6 @@
 ﻿using ClassManagement.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ClassManagement.API.Requests
 {
@@ -22,6 +23,9 @@ namespace ClassManagement.API.Requests
 
         [Range(20, 255, ErrorMessage = "MaxCapacity must be between 20 and 255.")]
         public byte MaxCapacity { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, object>? AdditionalData { get; set; }
 
         public CreateClassRequest() { }
 

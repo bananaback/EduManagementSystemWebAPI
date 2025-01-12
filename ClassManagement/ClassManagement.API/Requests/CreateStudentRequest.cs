@@ -1,10 +1,10 @@
 ﻿using ClassManagement.Domain.Enums;
-using ClassManagement.Domain.ValueObjects;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ClassManagement.API.Requests
 {
-    public class CreateStudentRequest
+    public class CreateStudentRequest : ValidatableRequest
     {
         [Required]
         public string FirstName { get; set; } = string.Empty;
@@ -23,5 +23,12 @@ namespace ClassManagement.API.Requests
         [Required]
         public bool ExposePrivateInfo { get; set; }
 
+        [JsonExtensionData]
+        public Dictionary<string, object>? AdditionalData { get; set; }
+
+        protected override void Validate()
+        {
+            ValidateProperties();
+        }
     }
 }

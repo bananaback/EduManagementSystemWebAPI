@@ -24,11 +24,16 @@ namespace ClassManagement.API.Controllers
                 return BadRequestModelState();
             }
 
-            var command = new CreateInboxMessageCommand 
-            { 
-                MessageId = request.MessageId, 
-                Type = request.Type, 
-                DateCreated = request.DateCreated, 
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
+            }
+
+            var command = new CreateInboxMessageCommand
+            {
+                MessageId = request.MessageId,
+                Type = request.Type,
+                DateCreated = request.DateCreated,
                 Payload = request.Payload
             };
 

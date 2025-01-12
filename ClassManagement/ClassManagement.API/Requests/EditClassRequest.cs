@@ -1,10 +1,9 @@
 ﻿using ClassManagement.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ClassManagement.API.Requests
 {
-    public class EditClassRequest
+    public class EditClassRequest : ValidatableRequest
     {
         public string? Name { get; set; }
 
@@ -18,5 +17,10 @@ namespace ClassManagement.API.Requests
 
         [JsonExtensionData]
         public Dictionary<string, object>? AdditionalData { get; set; }
+
+        protected override void Validate()
+        {
+            ValidateProperties();
+        }
     }
 }

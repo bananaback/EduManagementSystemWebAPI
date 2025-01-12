@@ -11,7 +11,6 @@ using ClassManagement.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace ClassManagement.API.Controllers
 {
@@ -41,6 +40,11 @@ namespace ClassManagement.API.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequestModelState();
+            }
+
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
             }
 
             request.Initialize(_requestValidator);
@@ -126,6 +130,11 @@ namespace ClassManagement.API.Controllers
             int? itemsPerPage = 5,
             CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
             var command = new GetAllClassesCommand
             {
                 Id = id,
@@ -152,9 +161,9 @@ namespace ClassManagement.API.Controllers
                 return BadRequestModelState();
             }
             var command = new GetClassByIdCommand { Id = id };
-            
+
             var classReadDto = await _mediator.Send(command, cancellationToken);
-            
+
             return Ok(classReadDto);
         }
 
@@ -164,6 +173,11 @@ namespace ClassManagement.API.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequestModelState();
+            }
+
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
             }
 
             var command = new EnrollStudentCommand

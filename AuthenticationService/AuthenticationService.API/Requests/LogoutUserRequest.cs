@@ -2,11 +2,16 @@
 
 namespace AuthenticationService.API.Requests
 {
-    public class LogoutUserRequest
+    public class LogoutUserRequest : ValidatableRequest
     {
         public string RefreshToken { get; set; } = string.Empty;
 
         [JsonExtensionData]
         public Dictionary<string, object>? AdditionalData { get; set; }
+
+        protected override void Validate()
+        {
+            ValidateProperties();
+        }
     }
 }

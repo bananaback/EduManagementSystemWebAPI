@@ -1,10 +1,5 @@
 ﻿using MediatR;
 using StudentManagement.Application.Commons.Interfaces.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentManagement.Application.Features.Students.Queries.GetAll
 {
@@ -15,17 +10,35 @@ namespace StudentManagement.Application.Features.Students.Queries.GetAll
         {
             _studentRepository = studentRepository;
         }
-        public async Task<IReadOnlyCollection<StudentReadDto>> Handle(GetAllStudentsCommand request, CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<StudentReadDto>> Handle(GetAllStudentsCommand command, CancellationToken cancellationToken)
         {
-            var students = await _studentRepository.GetAllAsync(cancellationToken);
+            var students = await _studentRepository.GetAllAsync(
+                command.PageNumber!.Value,
+                command.ItemsPerPage!.Value,
+                command.Id,
+                command.FirstName,
+                command.LastName,
+                command.Email,
+                command.DateOfBirthBefore,
+                command.DateOfBirthAfter,
+                command.EnrollmentDateBefore,
+                command.EnrollmentDateAfter,
+                command.HouseNumber,
+                command.Street,
+                command.Ward,
+                command.District,
+                command.City,
+                cancellationToken);
 
             return students.Select(
-                s => new StudentReadDto
+                student => new StudentReadDto
                 {
-                    Id = s.Id,
-                    Name = s.Name,
-                    Email = s.Email,
-                    DateEnrolled = s.EnrollmentDate
+                    Id = student.Id,
+                    Name = student.ExposePrivateInfo ? student.Name.FullName : "secret",
+                    Email = student.ExposePrivateInfo ? student.Email.Value : "secret",
+                    DateOfBirth = student.ExposePrivateInfo ? student.DateOfBirth : DateOnly.MinValue,
+                    DateEnrolled = student.EnrollmentDate,
+                    Address = student.ExposePrivateInfo ? student.Address.GetFullAddress() : "secret"
                 }
             ).ToList().AsReadOnly();
         }

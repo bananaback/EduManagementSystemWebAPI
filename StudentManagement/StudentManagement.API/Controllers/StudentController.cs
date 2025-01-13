@@ -8,6 +8,8 @@ using StudentManagement.Application.Features.Students.Commands.Delete;
 using StudentManagement.Application.Features.Students.Commands.Edit;
 using StudentManagement.Application.Features.Students.Queries.GetAll;
 using StudentManagement.Application.Features.Students.Queries.GetById;
+using StudentManagement.Domain.Enums;
+using StudentManagement.Domain.ValueObjects;
 
 namespace StudentManagement.API.Controllers
 {
@@ -22,31 +24,88 @@ namespace StudentManagement.API.Controllers
         {
             _mediator = mediator;
         }
-
         [HttpGet("test")]
         public IActionResult Get()
         {
             return Ok("Endpoint reached!");
         }
 
+        [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetAllStudentsAsync(CancellationToken cancellationToken = default)
+
+        public async Task<IActionResult> GetAllStudentsAsync(
+            Guid? id = null,
+            string? firstName = null,
+            string? lastName = null,
+            string? email = null,
+            GenderEnum? gender = null,
+            DateOnly? dateOfBirthBefore = null,
+            DateOnly? dateOfBirthAfter = null,
+            DateOnly? enrollmentDateBefore = null,
+            DateOnly? enrollmentDateAfter = null,
+            string? houseNumber = null,
+            string? street = null,
+            string? ward = null,
+            string? district = null,
+            string? city = null,
+            int? pageNumber = 1,
+            int? itemsPerPage = 5,
+            CancellationToken cancellationToken = default)
         {
-            var command = new GetAllStudentsCommand();
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
+            var command = new GetAllStudentsCommand
+            {
+                Id = id,
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Gender = gender,
+                DateOfBirthBefore = dateOfBirthBefore,
+                DateOfBirthAfter = dateOfBirthAfter,
+                EnrollmentDateBefore = enrollmentDateBefore,
+                EnrollmentDateAfter = enrollmentDateAfter,
+                HouseNumber = houseNumber,
+                Street = street,
+                Ward = ward,
+                District = district,
+                City = city,
+                PageNumber = pageNumber,
+                ItemsPerPage = itemsPerPage
+            };
 
             var students = await _mediator.Send(command, cancellationToken);
 
             return Ok(students);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateStudentAsync([FromBody] CreateStudentRequest request, CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
+            }
+
             var command = new CreateStudentCommand
             {
-                Name = request.Name,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
                 Email = request.Email,
-                EnrollmentDate = request.EnrollmentDate
+                Gender = request.Gender,
+                DateOfBirth = request.DateOfBirth,
+                EnrollmentDate = request.EnrollmentDate,
+                Address = new Address(request.Address.HouseNumber, request.Address.Street, request.Address.Ward, request.Address.District, request.Address.City),
+                ExposePrivateInfo = request.ExposePrivateInfo
             };
 
             var createdStudentId = await _mediator.Send(command, cancellationToken);
@@ -61,9 +120,15 @@ namespace StudentManagement.API.Controllers
             return CreatedAtRoute(nameof(GetStudentById), new { id = createdStudentId }, studentReadDto);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:guid}", Name = nameof(GetStudentById))]
         public async Task<IActionResult> GetStudentById(Guid id, CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
             var command = new GetStudentByIdCommand
             {
                 Id = id
@@ -74,6 +139,7 @@ namespace StudentManagement.API.Controllers
             return Ok(studentReadDto);
         }
 
+        [AllowAnonymous]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> EditStudentById(Guid id, [FromBody] EditStudentRequest request, CancellationToken cancellationToken = default)
         {
@@ -82,12 +148,22 @@ namespace StudentManagement.API.Controllers
                 return BadRequestModelState();
             }
 
+            if (request.AdditionalData != null && request.AdditionalData.Count > 0)
+            {
+                return BadRequest(new ErrorResponse("Unknown fields detected in the request."));
+            }
+
             var command = new EditStudentCommand
             {
                 Id = id,
-                Name = request.Name,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
                 Email = request.Email,
+                Gender = request.Gender,
+                DateOfBirth = request.DateOfBirth,
                 EnrollmentDate = request.EnrollmentDate,
+                Address = (request.Address != null) ? new Address(request.Address.HouseNumber, request.Address.Street, request.Address.Ward, request.Address.District, request.Address.City) : null,
+                ExposePrivateInfo = request.ExposePrivateInfo
             };
 
             var updatedStudentId = await _mediator.Send(command, cancellationToken);
@@ -95,9 +171,15 @@ namespace StudentManagement.API.Controllers
             return Ok($"Edit student with id {id} successfully.");
         }
 
+        [AllowAnonymous]
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteStudentById(Guid id, CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
             var command = new DeleteStudentCommand
             {
                 Id = id

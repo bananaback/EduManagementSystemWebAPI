@@ -1,16 +1,18 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StudentManagement.Domain.Enums;
+using StudentManagement.Domain.ValueObjects;
 
 namespace StudentManagement.Application.Features.Students.Commands.Create
 {
     public class CreateStudentCommand : IRequest<Guid>
     {
-        public string Name { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public DateTime EnrollmentDate { get; set; }
+        public GenderEnum Gender { get; set; }
+        public DateOnly DateOfBirth { get; set; }
+        public DateOnly EnrollmentDate { get; set; }
+        public Address Address { get; set; } = null!;
+        public bool ExposePrivateInfo { get; set; }
     }
 }

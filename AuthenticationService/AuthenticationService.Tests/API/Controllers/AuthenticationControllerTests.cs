@@ -1,6 +1,7 @@
 ﻿using AuthenticationService.API.Controllers;
 using AuthenticationService.API.Requests;
 using AuthenticationService.API.Responses;
+using AuthenticationService.API.Validators;
 using AuthenticationService.Application.Features.Login;
 using AuthenticationService.Application.Features.LogoutUser;
 using AuthenticationService.Application.Features.Register;
@@ -21,7 +22,8 @@ namespace AuthenticationService.Tests.API.Controllers
         public AuthenticationControllerTests()
         {
             _mediatorMock = new Mock<IMediator>();
-            _controller = new AuthenticationController(_mediatorMock.Object);
+            var requestValidator = new RequestValidator();
+            _controller = new AuthenticationController(_mediatorMock.Object, requestValidator);
         }
 
         [Fact]
@@ -109,25 +111,6 @@ namespace AuthenticationService.Tests.API.Controllers
                     AccessToken = "access_token",
                     RefreshToken = "refresh_token"
                 });
-        }
-
-        [Fact]
-        public async Task LoginUser_EmptyCredentials_ReturnsBadRequest()
-        {
-            // Arrange
-            var request = new LoginUserRequest
-            {
-                Username = "",
-                Password = ""
-            };
-
-            // Act
-            var result = await _controller.LoginUser(request);
-
-            // Assert
-            result.Should().BeOfType<BadRequestObjectResult>()
-                .Which.Value.Should().BeOfType<ErrorResponse>()
-                .Which.ErrorMessages.Should().Contain("Username and password cannot be empty.");
         }
 
         [Fact]

@@ -1,9 +1,34 @@
-﻿namespace StudentManagement.API.Requests
+﻿using StudentManagement.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace StudentManagement.API.Requests
 {
-    public class CreateStudentRequest
+    public class CreateStudentRequest : ValidatableRequest
     {
-        public string Name { get; set; } = string.Empty;
+        [Required]
+        public string FirstName { get; set; } = string.Empty;
+        [Required]
+        public string LastName { get; set; } = string.Empty;
+        [Required]
         public string Email { get; set; } = string.Empty;
-        public DateTime EnrollmentDate { get; set; }
+        [Required]
+        public GenderEnum Gender { get; set; }
+        [Required]
+        public DateOnly DateOfBirth { get; set; }
+        [Required]
+        public DateOnly EnrollmentDate { get; set; }
+        [Required]
+        public AddressDTO Address { get; set; } = null!;
+        [Required]
+        public bool ExposePrivateInfo { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, object>? AdditionalData { get; set; }
+
+        protected override void Validate()
+        {
+            ValidateProperties();
+        }
     }
 }

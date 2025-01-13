@@ -1,11 +1,6 @@
 ﻿using MediatR;
 using StudentManagement.Application.Commons.Interfaces.Repositories;
 using StudentManagement.Application.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentManagement.Application.Features.Students.Queries.GetById
 {
@@ -28,9 +23,11 @@ namespace StudentManagement.Application.Features.Students.Queries.GetById
             return new StudentReadDto
             {
                 Id = student.Id,
-                Name = student.Name,
-                Email = student.Email,
-                DateEnrolled = student.EnrollmentDate
+                Name = student.ExposePrivateInfo ? student.Name.FullName : "secret",
+                Email = student.ExposePrivateInfo ? student.Email.Value : "secret",
+                DateOfBirth = student.ExposePrivateInfo ? student.DateOfBirth : DateOnly.MinValue,
+                DateEnrolled = student.EnrollmentDate,
+                Address = student.ExposePrivateInfo ? student.Address.GetFullAddress() : "secret"
             };
         }
     }

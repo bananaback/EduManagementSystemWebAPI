@@ -1,5 +1,4 @@
-﻿using AuthenticationService.API.Validators;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace AuthenticationService.API.Requests
 {
@@ -7,7 +6,7 @@ namespace AuthenticationService.API.Requests
     {
         public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public string ConfirmPassword {  get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty;
 
         [JsonExtensionData]
         public Dictionary<string, object>? AdditionalData { get; set; }
@@ -15,11 +14,6 @@ namespace AuthenticationService.API.Requests
         protected override void Validate()
         {
             ValidateProperties();
-
-            if (Password != ConfirmPassword)
-            {
-                throw new ArgumentException("Password and ConfirmPassword do not match.");
-            }
         }
     }
 }

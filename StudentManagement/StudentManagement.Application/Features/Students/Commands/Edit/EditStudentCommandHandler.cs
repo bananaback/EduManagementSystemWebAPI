@@ -2,11 +2,7 @@
 using StudentManagement.Application.Commons.Interfaces;
 using StudentManagement.Application.Commons.Interfaces.Repositories;
 using StudentManagement.Application.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StudentManagement.Domain.ValueObjects;
 
 namespace StudentManagement.Application.Features.Students.Commands.Edit
 {
@@ -29,14 +25,28 @@ namespace StudentManagement.Application.Features.Students.Commands.Edit
                 throw new StudentRetrievalException($"Student with id {command.Id} do not exist");
             }
 
-            if (existingStudent.Name == command.Name
-                && existingStudent.Email == command.Email
-                && existingStudent.EnrollmentDate == command.EnrollmentDate)
+            var personName = (PersonName?)null;
+            var email = (Email?)null;
+
+            if (command.Email != null)
             {
-                return command.Id;
+                var existingStudentByEmail = await _studentRepository.GetByEmailAsync(command.Email, cancellationToken);
+
+                if (existingStudentByEmail != null)
+                {
+                    throw new StudentPersistenceException($"Student with email {command.Email} already exist.");
+                }
+
+                email = new Email(command.Email);
             }
 
-            existingStudent.Update(command.Name, command.Email, command.EnrollmentDate);
+
+            if (command.FirstName != null || command.LastName != null)
+            {
+                personName = new PersonName(command.FirstName!, command.LastName!);
+            }
+
+            existingStudent.Update(personName, email, command.Gender, command.DateOfBirth, command.EnrollmentDate, command.Address, command.ExposePrivateInfo);
 
             var res = await _unitOfWork.SaveChangesAsync(cancellationToken);
 

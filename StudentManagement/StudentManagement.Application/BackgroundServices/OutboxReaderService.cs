@@ -3,9 +3,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StudentManagement.Application.Commons.Interfaces.Repositories;
 using StudentManagement.Application.Commons.Interfaces.Services;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace StudentManagement.Application.BackgroundServices
 {
@@ -44,7 +41,7 @@ namespace StudentManagement.Application.BackgroundServices
                     _logger.LogError(ex, "Error occurred in OutboxReaderService.");
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
             }
         }
     }

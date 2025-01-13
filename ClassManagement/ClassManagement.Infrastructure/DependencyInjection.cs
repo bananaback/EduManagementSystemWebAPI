@@ -1,4 +1,5 @@
-﻿using ClassManagement.Application.Common.Interfaces;
+﻿using ClassManagement.Application.BackgroundServices;
+using ClassManagement.Application.Common.Interfaces;
 using ClassManagement.Application.Common.Interfaces.Repositories;
 using ClassManagement.Application.Common.Interfaces.Services;
 using ClassManagement.Application.Features.Classes.Commands.Create;
@@ -19,10 +20,10 @@ namespace ClassManagement.Infrastructure
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructure(
-            this IServiceCollection services, 
+            this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDbContext>(options => 
+            services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             var serviceProvider = services.BuildServiceProvider();
@@ -43,7 +44,8 @@ namespace ClassManagement.Infrastructure
                 };
             });
 
-            services.AddMediatR(cfg => {
+            services.AddMediatR(cfg =>
+            {
                 cfg.RegisterServicesFromAssemblyContaining<CreateClassCommandHandler>();
             });
 
@@ -59,6 +61,9 @@ namespace ClassManagement.Infrastructure
             services.AddScoped<IMessageSender, HttpMessageSender>();
             services.AddScoped<IInboxMessageRepository, InboxMessageRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddHostedService<InboxReaderService>();
+
             return services;
         }
     }

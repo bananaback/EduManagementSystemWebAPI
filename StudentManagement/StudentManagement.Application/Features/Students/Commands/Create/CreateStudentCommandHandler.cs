@@ -3,6 +3,7 @@ using StudentManagement.Application.Commons.Interfaces;
 using StudentManagement.Application.Commons.Interfaces.Repositories;
 using StudentManagement.Application.Exceptions;
 using StudentManagement.Domain.Entities;
+using StudentManagement.Domain.Enums;
 using StudentManagement.Domain.ValueObjects;
 
 namespace StudentManagement.Application.Features.Students.Commands.Create
@@ -10,10 +11,12 @@ namespace StudentManagement.Application.Features.Students.Commands.Create
     public class CreateStudentCommandHandler : IRequestHandler<CreateStudentCommand, Guid>
     {
         private readonly IStudentRepository _studentRepository;
+        private readonly IOutboxRepository _outboxRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public CreateStudentCommandHandler(IStudentRepository studentRepository, IUnitOfWork unitOfWork)
+        public CreateStudentCommandHandler(IStudentRepository studentRepository, IOutboxRepository outboxRepository, IUnitOfWork unitOfWork)
         {
             _studentRepository = studentRepository;
+            _outboxRepository = outboxRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -40,6 +43,14 @@ namespace StudentManagement.Application.Features.Students.Commands.Create
             );
 
             await _studentRepository.AddAsync(newStudent, cancellationToken);
+
+            // Serialize the student object
+            var serializedStudent = System.Text.Json.JsonSerializer.Serialize(newStudent);
+
+            // Pass serializedStudent to the OutboxMessage constructor
+            var message = new OutboxMessage(MessageType.STUDENTCREATED, serializedStudent);
+
+            await _outboxRepository.AddAsync(message, cancellationToken);
 
             var res = await _unitOfWork.SaveChangesAsync(cancellationToken);
 

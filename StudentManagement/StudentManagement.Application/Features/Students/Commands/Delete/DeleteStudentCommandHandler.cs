@@ -2,22 +2,21 @@
 using StudentManagement.Application.Commons.Interfaces;
 using StudentManagement.Application.Commons.Interfaces.Repositories;
 using StudentManagement.Application.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StudentManagement.Domain.Entities;
+using StudentManagement.Domain.Enums;
 
 namespace StudentManagement.Application.Features.Students.Commands.Delete
 {
     public class DeleteStudentCommandHandler : IRequestHandler<DeleteStudentCommand, Guid>
     {
         private readonly IStudentRepository _studentRepository;
+        private readonly IOutboxRepository _outboxRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteStudentCommandHandler(IStudentRepository studentRepository, IUnitOfWork unitOfWork)
+        public DeleteStudentCommandHandler(IStudentRepository studentRepository, IOutboxRepository outboxRepository, IUnitOfWork unitOfWork)
         {
             _studentRepository = studentRepository;
+            _outboxRepository = outboxRepository;
             _unitOfWork = unitOfWork;
         }
         public async Task<Guid> Handle(DeleteStudentCommand command, CancellationToken cancellationToken)
@@ -26,9 +25,19 @@ namespace StudentManagement.Application.Features.Students.Commands.Delete
 
             if (existingStudent == null)
             {
-                throw new StudentRetrievalException($"Student with id {command.Id} not exist.");
+                throw new StudentRetrievalException($"Student with id {command.Id} does not exist.");
             }
 
+            // Serialize the student data before deletion
+            var serializedStudent = System.Text.Json.JsonSerializer.Serialize(existingStudent);
+
+            // Create an outbox message for the deletion
+            var message = new OutboxMessage(MessageType.STUDENTDELETED, serializedStudent);
+
+            // Add the outbox message to the repository
+            await _outboxRepository.AddAsync(message, cancellationToken);
+
+            // Proceed with deleting the student
             _studentRepository.Delete(existingStudent);
 
             var res = await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -40,5 +49,6 @@ namespace StudentManagement.Application.Features.Students.Commands.Delete
 
             return command.Id;
         }
+
     }
 }

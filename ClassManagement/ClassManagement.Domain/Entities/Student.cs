@@ -66,5 +66,10 @@ namespace ClassManagement.Domain.Entities
             if (address != null) Address = address;
             if (exposePrivateInfo.HasValue) ExposePrivateInfo = exposePrivateInfo.Value;
         }
+
+        public void UpdateId(Guid id)
+        {
+            Id = id;
+        }
     }
 }

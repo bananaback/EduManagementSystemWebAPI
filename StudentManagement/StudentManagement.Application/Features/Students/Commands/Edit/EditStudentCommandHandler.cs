@@ -2,6 +2,8 @@
 using StudentManagement.Application.Commons.Interfaces;
 using StudentManagement.Application.Commons.Interfaces.Repositories;
 using StudentManagement.Application.Exceptions;
+using StudentManagement.Domain.Entities;
+using StudentManagement.Domain.Enums;
 using StudentManagement.Domain.ValueObjects;
 
 namespace StudentManagement.Application.Features.Students.Commands.Edit
@@ -9,11 +11,13 @@ namespace StudentManagement.Application.Features.Students.Commands.Edit
     public class EditStudentCommandHandler : IRequestHandler<EditStudentCommand, Guid>
     {
         private readonly IStudentRepository _studentRepository;
+        private readonly IOutboxRepository _outboxRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public EditStudentCommandHandler(IStudentRepository studentRepository, IUnitOfWork unitOfWork)
+        public EditStudentCommandHandler(IStudentRepository studentRepository, IOutboxRepository outboxRepository, IUnitOfWork unitOfWork)
         {
             _studentRepository = studentRepository;
+            _outboxRepository = outboxRepository;
             _unitOfWork = unitOfWork;
         }
         public async Task<Guid> Handle(EditStudentCommand command, CancellationToken cancellationToken)
@@ -47,6 +51,16 @@ namespace StudentManagement.Application.Features.Students.Commands.Edit
             }
 
             existingStudent.Update(personName, email, command.Gender, command.DateOfBirth, command.EnrollmentDate, command.Address, command.ExposePrivateInfo);
+
+
+            // Serialize the updated student object
+            var serializedStudent = System.Text.Json.JsonSerializer.Serialize(existingStudent);
+
+            // Create an outbox message for the update
+            var message = new OutboxMessage(MessageType.STUDENTUPDATED, serializedStudent);
+
+            // Add the outbox message to the repository
+            await _outboxRepository.AddAsync(message, cancellationToken);
 
             var res = await _unitOfWork.SaveChangesAsync(cancellationToken);
 

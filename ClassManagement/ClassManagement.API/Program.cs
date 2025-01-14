@@ -1,6 +1,5 @@
 using ClassManagement.API.Middlewares;
 using ClassManagement.API.Validators;
-using ClassManagement.Application;
 using ClassManagement.Infrastructure;
 using ClassManagement.Infrastructure.Services.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +17,7 @@ builder.Configuration.GetSection("Authentication").Bind(authenticationConfigurat
 builder.Services.AddSingleton(authenticationConfiguration);
 
 // Register Infrastructure services
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
 
 
 builder.Services.AddCors(options =>
@@ -45,7 +44,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 }); ;  // This adds API controllers to the DI container
 
-    
+
 //Add support to logging with SERILOG
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));

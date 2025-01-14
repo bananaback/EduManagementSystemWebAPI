@@ -14,13 +14,15 @@ namespace StudentManagement.Tests.Application.Features.Students.Create
     {
         private readonly Mock<IStudentRepository> _studentRepositoryMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<IOutboxRepository> _outboxRepositoryMock;
         private readonly CreateStudentCommandHandler _handler;
 
         public CreateStudentCommandHandlerTests()
         {
             _studentRepositoryMock = new Mock<IStudentRepository>();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _handler = new CreateStudentCommandHandler(_studentRepositoryMock.Object, _unitOfWorkMock.Object);
+            _outboxRepositoryMock = new Mock<IOutboxRepository>();
+            _handler = new CreateStudentCommandHandler(_studentRepositoryMock.Object, _outboxRepositoryMock.Object, _unitOfWorkMock.Object);
         }
 
         [Fact]

@@ -13,6 +13,7 @@ namespace StudentManagement.Tests.Application.Features.Students.Delete
     public class DeleteStudentCommandHandlerTests
     {
         private readonly Mock<IStudentRepository> _studentRepositoryMock;
+        private readonly Mock<IOutboxRepository> _outboxRepositoryMock;
         private readonly Mock<IUnitOfWork> _unitOfWork;
         private readonly DeleteStudentCommandHandler _handler;
 
@@ -20,7 +21,8 @@ namespace StudentManagement.Tests.Application.Features.Students.Delete
         {
             _studentRepositoryMock = new Mock<IStudentRepository>();
             _unitOfWork = new Mock<IUnitOfWork>();
-            _handler = new DeleteStudentCommandHandler(_studentRepositoryMock.Object, _unitOfWork.Object);
+            _outboxRepositoryMock = new Mock<IOutboxRepository>();
+            _handler = new DeleteStudentCommandHandler(_studentRepositoryMock.Object, _outboxRepositoryMock.Object, _unitOfWork.Object);
         }
 
         [Fact]

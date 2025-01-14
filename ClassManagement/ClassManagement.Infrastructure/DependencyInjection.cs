@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
@@ -21,10 +22,20 @@ namespace ClassManagement.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(
             this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IHostEnvironment hostEnvironment)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+            // Automatically apply migrations if in Production
+            if (hostEnvironment.IsProduction())
+            {
+                using var SP = services.BuildServiceProvider();
+                using var scope = SP.CreateScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                dbContext.Database.Migrate();
+            }
 
             var serviceProvider = services.BuildServiceProvider();
             var authenticationConfiguration = serviceProvider.GetRequiredService<AuthenticationConfiguration>();
@@ -51,7 +62,14 @@ namespace ClassManagement.Infrastructure
 
             services.AddHttpClient("AckApiClient", client =>
             {
-                client.BaseAddress = new Uri("https://localhost:7202/");
+                if (hostEnvironment.IsDevelopment())
+                {
+                    client.BaseAddress = new Uri("https://localhost:7202/");
+                }
+                else
+                {
+                    client.BaseAddress = new Uri("https://studentservice-clusterip-srv:8080/");
+                }
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
 

@@ -18,7 +18,7 @@ builder.Services.AddSingleton(authenticationConfiguration);
 
 
 // Register Infrastructure services
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
 
 builder.Services.AddCors(options =>
 {

@@ -15,12 +15,14 @@ namespace StudentManagement.Tests.Application.Features.Students.Edit
         private readonly Mock<IStudentRepository> _studentRepositoryMock;
         private readonly Mock<IUnitOfWork> _unitOfWork;
         private readonly EditStudentCommandHandler _handler;
+        private readonly Mock<IOutboxRepository> _outboxRepository;
 
         public EditStudentCommandHandlerTests()
         {
             _studentRepositoryMock = new Mock<IStudentRepository>();
             _unitOfWork = new Mock<IUnitOfWork>();
-            _handler = new EditStudentCommandHandler(_studentRepositoryMock.Object, _unitOfWork.Object);
+            _outboxRepository = new Mock<IOutboxRepository>();
+            _handler = new EditStudentCommandHandler(_studentRepositoryMock.Object, _outboxRepository.Object, _unitOfWork.Object);
         }
 
         [Fact]

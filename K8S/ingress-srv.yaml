@@ -28,3 +28,13 @@ spec:
                 name: classservice-clusterip-srv
                 port:
                   number: 8080
+    - host: auth.bananaback.dev
+      http:
+        paths:
+          - path: /(.+)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: authservice-clusterip-srv
+                port:
+                  number: 8080

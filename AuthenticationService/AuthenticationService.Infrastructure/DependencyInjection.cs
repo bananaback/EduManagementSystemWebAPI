@@ -15,13 +15,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AuthenticationService.Infrastructure
 {
@@ -29,10 +26,20 @@ namespace AuthenticationService.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(
             this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IHostEnvironment hostEnvironment)
         {
             services.AddDbContext<AuthenticationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+            // Automatically apply migrations if in Production
+            if (hostEnvironment.IsProduction())
+            {
+                using var SP = services.BuildServiceProvider();
+                using var scope = SP.CreateScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<AuthenticationDbContext>();
+                dbContext.Database.Migrate();
+            }
 
             var serviceProvider = services.BuildServiceProvider();
             var authenticationConfiguration = serviceProvider.GetRequiredService<AuthenticationConfiguration>();
@@ -52,7 +59,8 @@ namespace AuthenticationService.Infrastructure
                 };
             });
 
-            services.AddMediatR(cfg => {
+            services.AddMediatR(cfg =>
+            {
                 cfg.RegisterServicesFromAssemblyContaining<RegisterUserCommandHandler>();
             });
 

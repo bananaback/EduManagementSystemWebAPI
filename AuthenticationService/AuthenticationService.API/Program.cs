@@ -15,7 +15,7 @@ var authenticationConfiguration = new AuthenticationConfiguration();
 builder.Configuration.GetSection("Authentication").Bind(authenticationConfiguration);
 builder.Services.AddSingleton(authenticationConfiguration);
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
 
 builder.Services.AddCors(options =>
 {

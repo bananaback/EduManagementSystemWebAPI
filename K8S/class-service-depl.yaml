@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: class-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: classservice
+  template:
+    metadata:
+      labels:
+        app: classservice
+    spec:
+      containers:
+        - name: classservice
+          image: tindocker88/classservice:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: classservice-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: classservice
+  ports:
+    - name: classservice
+      protocol: TCP
+      port: 8080
+      targetPort: 8080

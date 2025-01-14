@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mssql-class-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql-class-depl
+spec:
+  selector:
+    matchLabels:
+      app: mssql-class
+  template:
+    metadata:
+      labels:
+        app: mssql-class
+    spec:
+      containers:
+        - name: mssql
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          ports:
+            - containerPort: 1433
+          env:
+            - name: MSSQL_PID
+              value: "Express"
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql-class-secret
+                  key: SA_PASSWORD
+          volumeMounts:
+            - mountPath: /var/opt/mssql/data
+              name: mssqlclassdb
+      volumes:
+        - name: mssqlclassdb
+          persistentVolumeClaim:
+            claimName: mssql-class-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-class-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: mssql-class
+  ports:
+    - name: mssql
+      protocol: TCP
+      port: 1433
+      targetPort: 1433

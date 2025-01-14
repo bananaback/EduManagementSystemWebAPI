@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1/$2$3
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: student.bananaback.dev
+      http:
+        paths:
+          - path: /(.+)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: studentservice-clusterip-srv
+                port:
+                  number: 8080
+    - host: class.bananaback.dev
+      http:
+        paths:
+          - path: /(.+)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: classservice-clusterip-srv
+                port:
+                  number: 8080

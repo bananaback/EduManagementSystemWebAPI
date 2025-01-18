@@ -19,7 +19,6 @@ A microservices-based educational management system for handling students and cl
 ## Technology Stack  
 - **.NET 8**  
 - **MediatR** for CQRS implementation.  
-- **RabbitMQ** for communication between services.  
 - **Entity Framework Core** for database access.  
 - **Docker** (for deployment).  
 
